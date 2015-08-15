@@ -60,11 +60,14 @@ DEFINES += HTTP_ONLY
 win32:INCLUDEPATH += .\dependances-developpement\jsoncpp-static-mingw32\include
 win32:LIBS += -L".\dependances-developpement\jsoncpp-static-mingw32\lib" -ljson_mingw_libmt
 
-unix:INCLUDEPATH += ./dependances-developpement/jsoncpp-static-unix/include
-unix:LIBS += -L"./dependances-developpement/jsoncpp-static-unix/lib" -ljson_linux-gcc-4.4.3_libmt
+#unix:INCLUDEPATH += ./dependances-developpement/jsoncpp-static-unix/include
+#unix:LIBS += -L"./dependances-developpement/jsoncpp-static-unix/lib" -ljson_linux-gcc-4.4.3_libmt
 
 SOURCES +=  main.cpp \
-            mainClass.cpp
+            mainClass.cpp \
+    dependances-developpement/jsoncpp/dist/jsoncpp.cpp
 
 HEADERS +=  mainClass.h \
-            Config.h
+            Config.h \
+    dependances-developpement/jsoncpp/dist/json/json-forwards.h \
+    dependances-developpement/jsoncpp/dist/json/json.h

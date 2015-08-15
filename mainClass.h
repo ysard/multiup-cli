@@ -28,8 +28,8 @@ This file is part of multiup_cli.
 #include "curl/curl.h"
 #include "Config.h"
 
-#include "json/reader.h" //json_cpp
-#include "json/value.h" //json_cpp
+#include "dependances-developpement/jsoncpp/dist/json/json-forwards.h"
+#include "dependances-developpement/jsoncpp/dist/json/json.h"
 
 struct Bricolage
 {

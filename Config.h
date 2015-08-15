@@ -24,7 +24,7 @@ This file is part of multiup_cli.
 //#define WINDOWS
 #define LINUX
 
-#define VERSION "0.3"
+#define VERSION "0.4.0"
 
 // --- Configuration des urls de l'API
 #define URL_CONNEXION_UTILISATEUR "http://www.multiup.org/api/login"

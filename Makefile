@@ -15,7 +15,7 @@ CXX           = g++
 DEFINES       = -DCURL_STATICLIB -DHTTP_ONLY
 CFLAGS        = -pipe -O2 -Wall -W -fPIE $(DEFINES)
 CXXFLAGS      = -pipe -O2 -Wall -W -fPIE $(DEFINES)
-INCPATH       = -I../../../Qt_unix/5.4/gcc_64/mkspecs/linux-g++ -I. -Idependances-developpement/curl-7.44.0-devel-unix-static/include -Idependances-developpement/jsoncpp-static-unix/include
+INCPATH       = -I../../../Qt_unix/5.4/gcc_64/mkspecs/linux-g++ -I. -Idependances-developpement/curl-7.44.0-devel-unix-static/include
 QMAKE         = /media/DATA/Qt_unix/5.4/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -36,7 +36,7 @@ DISTNAME      = multiup_cli1.0.0
 DISTDIR = /media/DATA/Projets/multiup/multiup_cli/.tmp/multiup_cli1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1 -Wl,-rpath,/media/DATA/Qt_unix/5.4/gcc_64
-LIBS          = $(SUBLIBS) -L./dependances-developpement/curl-7.44.0-devel-unix-static/lib -lcurl -L./dependances-developpement/jsoncpp-static-unix/lib -ljson_linux-gcc-4.4.3_libmt 
+LIBS          = $(SUBLIBS) -L./dependances-developpement/curl-7.44.0-devel-unix-static/lib -lcurl 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -49,9 +49,11 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = main.cpp \
-		mainClass.cpp 
+		mainClass.cpp \
+		dependances-developpement/jsoncpp/dist/jsoncpp.cpp 
 OBJECTS       = main.o \
-		mainClass.o
+		mainClass.o \
+		jsoncpp.o
 DIST          = ../../../Qt_unix/5.4/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/common/shell-unix.conf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/common/unix.conf \
@@ -166,8 +168,11 @@ DIST          = ../../../Qt_unix/5.4/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/features/yacc.prf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/features/lex.prf \
 		multiup_cli.pro mainClass.h \
-		Config.h main.cpp \
-		mainClass.cpp
+		Config.h \
+		dependances-developpement/jsoncpp/dist/json/json-forwards.h \
+		dependances-developpement/jsoncpp/dist/json/json.h main.cpp \
+		mainClass.cpp \
+		dependances-developpement/jsoncpp/dist/jsoncpp.cpp
 QMAKE_TARGET  = multiup_cli
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = multiup_cli
@@ -476,11 +481,8 @@ main.o: main.cpp mainClass.h \
 		dependances-developpement/curl-7.44.0-devel-unix-static/include/curl/multi.h \
 		dependances-developpement/curl-7.44.0-devel-unix-static/include/curl/typecheck-gcc.h \
 		Config.h \
-		dependances-developpement/jsoncpp-static-unix/include/json/reader.h \
-		dependances-developpement/jsoncpp-static-unix/include/json/features.h \
-		dependances-developpement/jsoncpp-static-unix/include/json/forwards.h \
-		dependances-developpement/jsoncpp-static-unix/include/json/config.h \
-		dependances-developpement/jsoncpp-static-unix/include/json/value.h
+		dependances-developpement/jsoncpp/dist/json/json-forwards.h \
+		dependances-developpement/jsoncpp/dist/json/json.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 mainClass.o: mainClass.cpp mainClass.h \
@@ -492,12 +494,12 @@ mainClass.o: mainClass.cpp mainClass.h \
 		dependances-developpement/curl-7.44.0-devel-unix-static/include/curl/multi.h \
 		dependances-developpement/curl-7.44.0-devel-unix-static/include/curl/typecheck-gcc.h \
 		Config.h \
-		dependances-developpement/jsoncpp-static-unix/include/json/reader.h \
-		dependances-developpement/jsoncpp-static-unix/include/json/features.h \
-		dependances-developpement/jsoncpp-static-unix/include/json/forwards.h \
-		dependances-developpement/jsoncpp-static-unix/include/json/config.h \
-		dependances-developpement/jsoncpp-static-unix/include/json/value.h
+		dependances-developpement/jsoncpp/dist/json/json-forwards.h \
+		dependances-developpement/jsoncpp/dist/json/json.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainClass.o mainClass.cpp
+
+jsoncpp.o: dependances-developpement/jsoncpp/dist/jsoncpp.cpp dependances-developpement/jsoncpp/dist/json/json.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o jsoncpp.o dependances-developpement/jsoncpp/dist/jsoncpp.cpp
 
 ####### Install
 
