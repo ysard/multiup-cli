@@ -1,0 +1,82 @@
+#This file is part of multiup_cli.
+#
+#    multiup_cli is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    multiup_cli is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with multiup_cli.  If not, see <http://www.gnu.org/licenses/>.
+#
+#    Copyright 2013 Lex
+#    www.multiup.org
+
+Adapter le fichier Config.h selon la plateforme (#define WINDOWS OU #define LINUX)
+
+Compilation via QtCreator ou mingw32 sous Windows
+	- Ouvrir multiup.pro
+	
+	ou
+	
+	- qmake multiup.pro
+	mingw32-make
+
+
+Compilation via Microsoft Visual Studio :
+	- En ligne de commande :
+		mkdir build
+		cd build
+		cmake .. -G "NMake Makefiles"
+		nmake
+		
+	- En gui, via l'IDE "Microsoft Visual Studio" :
+		mkdir build
+		cd build
+		cmake .. -G "Visual Studio 10"
+		ouvrir le projet .sln construit dans /build
+		
+		COMPILER en mode "Release" !
+		en mode debug => ouvrir les paramètres du projet et dans l'éditeur de lien : Entrée / "bibliothèques par défaut spécifiques ignorées" : msvcrt.lib
+		cela évitera ce warning:
+			LINK : warning LNK4098: conflit entre la bibliothèque par défaut 'MSVCRT' et les autres bibliothèques ; utilisez /NODEFAULTLIB:library
+
+
+Compilation sous Linux/GNU (ubuntu) :
+	
+	- Via cmake :
+		mkdir build
+		cd build
+		cmake .. -G "Unix Makefiles"
+		make
+		
+	- Via qmake :
+		se placer dans le répertoire contenant le fichier .pro
+		qmake
+		make
+
+
+De manière générale, l'application générée se trouvera dans /build
+
+Si nécessité de modifier les répertoires des librairies linkées (changement de compilateur : mingw32/msvc/gcc++)
+=> éditer en conséquence CMakeCache.txt
+
+_______________________________________________________________________________________________
+Compilation des librairies:
+jsoncpp (d'après le README des sources):
+	Installer scons: 
+		apt-get install scons
+	Compiler pour la plateforme:
+		scons platform=linux-gcc multiup_cli
+		
+curl:
+	Pas besoin de renseigner le --host:
+	./configure --disable-tftp --disable-sspi --disable-ipv6 --disable-ldaps --disable-ldap --disable-telnet --disable-pop3 --disable-ftp --without-ssl --disable-imap --disable-smtp --disable-pop3 --disable-rtsp --disable-ares --without-ca-bundle --disable-warnings --disable-manual --without-nss --enable-shared --without-zlib --without-random --disable-crypto-auth --disable-proxy --disable-verbose --enable-hidden-symbols --without-libidn --without-librtmp
+	make -j 8
+	
+	La librairie se trouve maintenant dans ./libs/.libs/ (libs contient les librairies la et lo)
+	
