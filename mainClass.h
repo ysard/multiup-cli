@@ -31,6 +31,9 @@ This file is part of multiup_cli.
 #include "dependances-developpement/jsoncpp/dist/json/json-forwards.h"
 #include "dependances-developpement/jsoncpp/dist/json/json.h"
 
+// Fix Unused variable warning, usage: UNUSED(x);
+#define UNUSED(x) (void)(x)
+
 struct Bricolage
 {
     int etape;

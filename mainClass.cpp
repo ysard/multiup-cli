@@ -243,6 +243,10 @@ void MainClass::connexion()
 
 int MainClass::progress_func(void *ptr, double TotalToDownload, double NowDownloaded, double TotalToUpload, double NowUploaded)
 {
+    UNUSED(ptr);
+    UNUSED(TotalToDownload);
+    UNUSED(NowDownloaded);
+
     // Retour chariot sans saut de ligne
     cout << '\r' << (NowUploaded/(1024*1024)) << "/" << (TotalToUpload/(1024*1024)) << " Mio | ";
     cout << (NowUploaded / TotalToUpload)*100 << " %    ";
@@ -252,6 +256,8 @@ int MainClass::progress_func(void *ptr, double TotalToDownload, double NowDownlo
 
 size_t MainClass::write_data(void *buffer, size_t size, size_t nmemb, void *userdata)
 {
+    UNUSED(userdata);
+
     //PS: fonction statique => on ne peut pas se servir des attributs/fonctions/signaux de la classe en cours..
     // Obligé de faire appel à une structure statique pour la remplir et s'en servir...
     stringstream strmResponse;
