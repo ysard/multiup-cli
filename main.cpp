@@ -39,10 +39,12 @@ int main(int argc, char *argv[])
     cout << "Multiup MaNaGer CLI v" << VERSION << " - by Lex & LuNiKoFf - Copyright 2013 Lex - Bienvenue !" << endl << endl;
     cout << "\tPour des fonctionnalites plus evoluees, veuillez vous diriger vers \"Multiup MaNaGer GUI\", disponible sur le site..." << endl << endl;
 
-    unsigned int found;
+    //unsigned int found;
+    std::size_t found;
 
     // Si il y a au moins 1 argument passé en manuel (le premier est toujours le nom de l'application)
     for(int i = 1; i < argc; i++) {
+
         argument = argv[i];
 
         // si --read a déjà été trouvé on tente d'ajouter l'argument suivant dans la liste sauf si il s'agit d'un autre paramètre

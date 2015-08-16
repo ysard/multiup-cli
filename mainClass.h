@@ -23,10 +23,14 @@ This file is part of multiup_cli.
 
 
 #include <sstream>
-#include <iostream>
+#include <string>
+//#include <iostream>
+#include <iomanip>
+#include <fstream>
 #include <list>
 #include "curl/curl.h"
 #include "Config.h"
+#include "colors_in_the_shell.h"
 
 #include "dependances-developpement/jsoncpp/dist/json/json-forwards.h"
 #include "dependances-developpement/jsoncpp/dist/json/json.h"
@@ -40,6 +44,7 @@ struct Bricolage
     std::string loginId;
     std::string adresseIp;
     std::list<std::string> hebergeursListe;
+    std::string fichierEnCours;
 
     std::string lien;
     std::string lienDelete;
@@ -50,7 +55,11 @@ enum EtatConnexion
     Bad, Ok, Error
 };
 
-std::string convertInt(int number);
+
+
+std::streampos getFileSize(const std::string& filename);
+std::string convertIntToString(const int &number);
+bool webhostParsing(const Json::Value webhost, const std::streampos file_size);
 
 class MainClass
 {
@@ -66,7 +75,6 @@ public:
     void connexion();
 
     void finProcedure(CURLcode hResult);
-
 
 
 private:

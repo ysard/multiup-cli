@@ -60,16 +60,22 @@ MainClass::~MainClass()
 
 void MainClass::lancement()
 {
-    //afficher();
+    afficher();
 
     // Upload des fichiers les uns après les autres
     list<string>::iterator iterator;
     for (iterator=m_listeFichiers.begin(); iterator!=m_listeFichiers.end(); ++iterator)
     {
+        // Mémorise le fichier courant
         m_fichierEnCours = *iterator;
+        bricolo.fichierEnCours = *iterator;
         cout << "Fichier en cours d'up : " << m_fichierEnCours << endl;
 
+        // Initialisation de la structure
+        bricolo.hebergeursListe.clear();
         bricolo.etape = 1;
+
+        // Début du traitement du fichier
         connexion();
     }
     cout << "Fin du programme" << endl;
@@ -84,7 +90,6 @@ void MainClass::afficher()
         cout << " " << *iterator;
 
     cout << endl;
-    //qDebug() << m_listeFichiers;
 }
 
 void MainClass::connexion()
@@ -168,7 +173,7 @@ void MainClass::connexion()
     else if (bricolo.etape == 3) { // Upload
         // Ajoute le nom d'utilisateur à la requête de curl (v2)
         if (m_connecte == true) {
-            //cout << "Curl :: Login : " << m_login << endl;
+            cout << "Curl :: Login : " << m_login << endl;
 
             curl_formadd(&m_post,
                          &m_last,
@@ -186,7 +191,7 @@ void MainClass::connexion()
             // Désolé mais l'itérateur n'a pas la méthode c_str().. obligé de convertir en string...
             hebergeur = *iterator;
 
-            //cout << "Curl :: Hebergeur : " << hebergeur << endl;
+            cout << "Curl :: Hebergeur : " << hebergeur << endl;
 
             curl_formadd(&m_post,
                          &m_last,
@@ -282,13 +287,13 @@ size_t MainClass::write_data(void *buffer, size_t size, size_t nmemb, void *user
             // Récupération du statut
             string objet = root.get("error", "").asString();
 
-            //cout << "Connexion :: Statut :" << objet << endl;
+            cout << "Connexion :: Statut : " << objet << endl;
             if (objet == "success") {
                 // Succès certain
 
                 // Récupération de l'id
-                objet = convertInt( root.get("user", 0).asInt() );
-                //cout << "Connexion :: Id utilisateur :" << objet << endl;
+                objet = convertIntToString( root.get("user", 0).asInt() );
+                //cout << "Connexion :: Id utilisateur : " << objet << endl;
                 bricolo.loginId = objet;
                 etatConnexion = Ok;
             }
@@ -301,7 +306,8 @@ size_t MainClass::write_data(void *buffer, size_t size, size_t nmemb, void *user
         else {
             // report to the user the failure and their locations in the document.
             cout  << "Failed to parse configuration\n"
-                       << reader.getFormatedErrorMessages();
+                  << reader.getFormattedErrorMessages()
+                  << root;
             etatConnexion = Error;
         }
     }
@@ -311,12 +317,12 @@ size_t MainClass::write_data(void *buffer, size_t size, size_t nmemb, void *user
             // Récupération du statut
             string objet = root.get("error", "").asString();
 
-            //cout << "SelectionServeur :: Statut :" << objet << endl;
+            cout << "SelectionServeur :: Statut : " << objet << endl;
             if (objet == "success") {
                 // Succès certain
                 bricolo.adresseIp = root.get("server", "").asString();
 
-                //cout << "SelectionServeur :: Serveur" << bricolo.adresseIp  << "trouve !" << endl;
+                cout << "SelectionServeur :: Serveur " << bricolo.adresseIp  << " trouve !" << endl;
                 etatConnexion = Ok;
             }
             else {
@@ -327,28 +333,89 @@ size_t MainClass::write_data(void *buffer, size_t size, size_t nmemb, void *user
         else {
             // report to the user the failure and their locations in the document.
             cout  << "Failed to parse configuration\n"
-                       << reader.getFormatedErrorMessages();
+                  << reader.getFormattedErrorMessages()
+                  << root;
             etatConnexion = Error;
         }
     }
     else if (bricolo.etape == 2) { // Récupération des hébergeurs
+        cout << temp << endl;
+        cout << "taille chaine: "<< temp.size() << endl;
         ok = reader.parse(temp, root);
         if (ok == true) {
             // Récupération du statut
             string objet = root.get("error", "").asString();
 
-            cout << "Hebergeurs :: Statut :" << objet << endl;
+            cout << "Hebergeurs :: Statut : " << objet << endl;
 
             if (objet == "success") {
                 // Succès certain
+                /* V4
+                {
+                    "error":"success",
+                    "hosts":
+                            {
+                                "1fichier.com": {
+                                                    "selected":"true",
+                                                    "size":5120
+                                                },
+                                "easybytez.com":{
+                                                    "selected":"false",
+                                                    "size":5120
+                                                }
+                            },
+                    "default":
+                            [
+                                "dl.free.fr",
+                                "uptobox.com",
+                            ],
+                    "maxHosts":18
+                }
+                */
+
                 vector<string> members = root["hosts"].getMemberNames();
                 vector<string>::iterator iterator;
 
+                // Récupération de la taille du fichier courant
+                std::streampos fileSize = getFileSize(bricolo.fichierEnCours);
+
                 for (iterator=members.begin(); iterator!=members.end(); ++iterator)
                 {
-                    //cout << *iterator << endl;
-                    bricolo.hebergeursListe.push_back(*iterator);
+                    /* La liste des hébergeurs et leurs états doit être sur 2 colonnes
+                     * nomHébergeur tailleMax [etat]; nomHébergeur tailleMax [etat];
+                     *
+                     * Mise en forme : http://en.cppreference.com/w/cpp/io/manip/setw
+                     * stew() définit le nombre de caractères de l'élément qui suit
+                     * left permet d'aligner à gauche l'élément qui suit (par défaut à droite)
+                     */
+
+                    // Nom1
+                    cout << setw(20) << left << *iterator;
+                    // Etat1
+                    bool ret = webhostParsing(root["hosts"][*iterator], fileSize);
+                    // Hébergeur1 autorisé
+                    if (ret)
+                        bricolo.hebergeursListe.push_back(*iterator);
+
+                    // Hébergeur suivant
+                    ++iterator;
+                    if (iterator == members.end()) {
+                        cout << endl;
+                        break;
+                    }
+
+                    // Nom2
+                    cout << setw(10) << ' '
+                         << setw(20) << *iterator;
+                    // Etat2
+                    ret = webhostParsing(root["hosts"][*iterator], fileSize);
+                    cout << endl;
+                    // Hébergeur2 autorisé
+                    if (ret)
+                        bricolo.hebergeursListe.push_back(*iterator);
                 }
+
+                cout << "Hebergeurs :: Nombre selectionnes : " << bricolo.hebergeursListe.size() << endl;
 
                 etatConnexion = Ok;
             }
@@ -360,7 +427,8 @@ size_t MainClass::write_data(void *buffer, size_t size, size_t nmemb, void *user
         else {
             // report to the user the failure and their locations in the document.
             cout  << "Failed to parse configuration\n"
-                       << reader.getFormatedErrorMessages();
+                  << reader.getFormattedErrorMessages()
+                  << root;
             etatConnexion = Error;
         }
     }
@@ -397,7 +465,7 @@ size_t MainClass::write_data(void *buffer, size_t size, size_t nmemb, void *user
             // PS: pas d'objet "error" ici..
             // report to the user the failure and their locations in the document.
             cout << "Failed to parse configuration\n"
-                       << reader.getFormatedErrorMessages();
+                 << reader.getFormattedErrorMessages();
         }
     }
     return nReal;
@@ -487,7 +555,49 @@ void MainClass::finProcedure(CURLcode hResult)
     }
 }
 
-string convertInt(int number)
+
+bool webhostParsing(const Json::Value webhost, const std::streampos file_size)
+{
+    /*
+     * Met en forme un hébergeur (affichage dans la console de la taille et de l'état de sélection)
+     * et retourne true ou false selon que l'hébergeur doit être ajouté à la liste ou non.
+     *
+     * Un hébergeur sélectionné mais n'acceptant pas la taille du fichier proposée sera
+     * affiché différemment des autres
+     */
+
+
+    // Récupération de l'état de sélection et de la taille max autorisée sur cet hébergeur
+    string selection_state = webhost.get("selected", "false").asString();
+    std::streampos max_upload_size = (std::streampos)webhost.get("size", 0).asInt();
+
+    // On affiche la taille en premier
+    cout << setw(4) << left << convertIntToString(max_upload_size)
+         << setw(5) << left << " Mo";
+
+    if (selection_state == "false") {
+        // Hébergeur désélectionné => False
+        cout << setw(10) << '[' + putInRed(selection_state) + ']'
+             << setw(3) << ';';
+        return false;
+
+    } else {
+        // Vérification de la taille autorisée
+        if (file_size > (std::streampos)(max_upload_size * 1024*1024)) {
+            // Taille de fichier excessive => False
+            cout << setw(10) << '[' + putBgInRed("false") + ']'
+                 << setw(3) << ';';
+            return false;
+        } else {
+            // Taille de fichier correcte => True
+            cout << setw(10) << '[' + putInGreen(selection_state + ' ') + ']'
+                 << setw(3) << ';';
+            return true;
+        }
+    }
+}
+
+string convertIntToString(const int &number)
 {
     // créer un flux de sortie
     ostringstream oss;
@@ -496,3 +606,31 @@ string convertInt(int number)
     // récupérer une chaîne de caractères
      return oss.str();
 }
+
+std::streampos getFileSize(const string& filename)
+{
+    // ios::ate flag, which means that the get pointer will be positioned at the end of the file.
+    //This way, when we call to member tellg(), we will directly obtain the size of the file.
+    std::ifstream in(filename.c_str(), std::ifstream::ate | std::ifstream::binary);
+
+    if (in.is_open()) {
+        std::streampos size = in.tellg();
+        in.close();
+        //cout << "TAILLE: " << filename << size << endl;
+        return size;
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

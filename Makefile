@@ -50,10 +50,12 @@ OBJECTS_DIR   = ./
 
 SOURCES       = main.cpp \
 		mainClass.cpp \
-		dependances-developpement/jsoncpp/dist/jsoncpp.cpp 
+		dependances-developpement/jsoncpp/dist/jsoncpp.cpp \
+		colors_in_the_shell.cpp 
 OBJECTS       = main.o \
 		mainClass.o \
-		jsoncpp.o
+		jsoncpp.o \
+		colors_in_the_shell.o
 DIST          = ../../../Qt_unix/5.4/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/common/shell-unix.conf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/common/unix.conf \
@@ -170,9 +172,11 @@ DIST          = ../../../Qt_unix/5.4/gcc_64/mkspecs/features/spec_pre.prf \
 		multiup_cli.pro mainClass.h \
 		Config.h \
 		dependances-developpement/jsoncpp/dist/json/json-forwards.h \
-		dependances-developpement/jsoncpp/dist/json/json.h main.cpp \
+		dependances-developpement/jsoncpp/dist/json/json.h \
+		colors_in_the_shell.h main.cpp \
 		mainClass.cpp \
-		dependances-developpement/jsoncpp/dist/jsoncpp.cpp
+		dependances-developpement/jsoncpp/dist/jsoncpp.cpp \
+		colors_in_the_shell.cpp
 QMAKE_TARGET  = multiup_cli
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = multiup_cli
@@ -481,6 +485,7 @@ main.o: main.cpp mainClass.h \
 		dependances-developpement/curl-7.44.0-devel-unix-static/include/curl/multi.h \
 		dependances-developpement/curl-7.44.0-devel-unix-static/include/curl/typecheck-gcc.h \
 		Config.h \
+		colors_in_the_shell.h \
 		dependances-developpement/jsoncpp/dist/json/json-forwards.h \
 		dependances-developpement/jsoncpp/dist/json/json.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
@@ -494,12 +499,16 @@ mainClass.o: mainClass.cpp mainClass.h \
 		dependances-developpement/curl-7.44.0-devel-unix-static/include/curl/multi.h \
 		dependances-developpement/curl-7.44.0-devel-unix-static/include/curl/typecheck-gcc.h \
 		Config.h \
+		colors_in_the_shell.h \
 		dependances-developpement/jsoncpp/dist/json/json-forwards.h \
 		dependances-developpement/jsoncpp/dist/json/json.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainClass.o mainClass.cpp
 
 jsoncpp.o: dependances-developpement/jsoncpp/dist/jsoncpp.cpp dependances-developpement/jsoncpp/dist/json/json.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o jsoncpp.o dependances-developpement/jsoncpp/dist/jsoncpp.cpp
+
+colors_in_the_shell.o: colors_in_the_shell.cpp colors_in_the_shell.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o colors_in_the_shell.o colors_in_the_shell.cpp
 
 ####### Install
 

@@ -65,9 +65,11 @@ win32:LIBS += -L".\dependances-developpement\jsoncpp-static-mingw32\lib" -ljson_
 
 SOURCES +=  main.cpp \
             mainClass.cpp \
-    dependances-developpement/jsoncpp/dist/jsoncpp.cpp
+    dependances-developpement/jsoncpp/dist/jsoncpp.cpp \
+    colors_in_the_shell.cpp
 
 HEADERS +=  mainClass.h \
             Config.h \
     dependances-developpement/jsoncpp/dist/json/json-forwards.h \
-    dependances-developpement/jsoncpp/dist/json/json.h
+    dependances-developpement/jsoncpp/dist/json/json.h \
+    colors_in_the_shell.h
