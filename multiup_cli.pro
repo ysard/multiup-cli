@@ -27,7 +27,7 @@ CONFIG -= qt
 #QT       += core
 #QT       -= gui
 
-TARGET = multiup_cli
+TARGET = multiup-cli
 CONFIG += console
 CONFIG += c++11
 #CONFIG   -= app_bundle
