@@ -14,7 +14,7 @@ CC            = gcc
 CXX           = g++
 DEFINES       = -DCURL_STATICLIB -DHTTP_ONLY
 CFLAGS        = -pipe -O2 -Wall -W -fPIE $(DEFINES)
-CXXFLAGS      = -pipe -O2 -Wall -W -fPIE $(DEFINES)
+CXXFLAGS      = -pipe -O2 -std=c++0x -Wall -W -fPIE $(DEFINES)
 INCPATH       = -I../../../Qt_unix/5.4/gcc_64/mkspecs/linux-g++ -I. -Idependances-developpement/curl-7.44.0-devel-unix-static/include
 QMAKE         = /media/DATA/Qt_unix/5.4/gcc_64/bin/qmake
 DEL_FILE      = rm -f
@@ -164,6 +164,7 @@ DIST          = ../../../Qt_unix/5.4/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/features/default_pre.prf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/features/resolve_config.prf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/features/default_post.prf \
+		../../../Qt_unix/5.4/gcc_64/mkspecs/features/c++11.prf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/features/warn_on.prf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/features/testcase_targets.prf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/features/exceptions.prf \
@@ -315,6 +316,7 @@ Makefile: multiup_cli.pro ../../../Qt_unix/5.4/gcc_64/mkspecs/linux-g++/qmake.co
 		../../../Qt_unix/5.4/gcc_64/mkspecs/features/default_pre.prf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/features/resolve_config.prf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/features/default_post.prf \
+		../../../Qt_unix/5.4/gcc_64/mkspecs/features/c++11.prf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/features/warn_on.prf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/features/testcase_targets.prf \
 		../../../Qt_unix/5.4/gcc_64/mkspecs/features/exceptions.prf \
@@ -430,6 +432,7 @@ Makefile: multiup_cli.pro ../../../Qt_unix/5.4/gcc_64/mkspecs/linux-g++/qmake.co
 ../../../Qt_unix/5.4/gcc_64/mkspecs/features/default_pre.prf:
 ../../../Qt_unix/5.4/gcc_64/mkspecs/features/resolve_config.prf:
 ../../../Qt_unix/5.4/gcc_64/mkspecs/features/default_post.prf:
+../../../Qt_unix/5.4/gcc_64/mkspecs/features/c++11.prf:
 ../../../Qt_unix/5.4/gcc_64/mkspecs/features/warn_on.prf:
 ../../../Qt_unix/5.4/gcc_64/mkspecs/features/testcase_targets.prf:
 ../../../Qt_unix/5.4/gcc_64/mkspecs/features/exceptions.prf:
