@@ -32,14 +32,17 @@ int main(int argc, char *argv[])
     string login;
     string password;
     list<string> listeFichier;
+    list<string> listHosts;
+
 
     string argument;
     bool read(false);
+    bool hosts = false;
+    bool viewOnly = false;
 
-    cout << "Multiup MaNaGer CLI v" << VERSION << " - by Lex & LuNiKoFf - Copyright 2013 Lex - Bienvenue !" << endl << endl;
-    cout << "\tPour des fonctionnalites plus evoluees, veuillez vous diriger vers \"Multiup MaNaGer GUI\", disponible sur le site..." << endl << endl;
+    cout << "Multiup MaNaGer CLI v" << VERSION << " - Copyright 2013-2015 Lex - Bienvenue !" << endl << endl;
+    cout << "\tPour des fonctionnalites plus evoluees, veuillez vous diriger vers \"Multiup MaNaGer GUI\",\n\tdisponible sur le site..." << endl << endl;
 
-    //unsigned int found;
     std::size_t found;
 
     // Si il y a au moins 1 argument passé en manuel (le premier est toujours le nom de l'application)
@@ -48,7 +51,7 @@ int main(int argc, char *argv[])
         argument = argv[i];
 
         // si --read a déjà été trouvé on tente d'ajouter l'argument suivant dans la liste sauf si il s'agit d'un autre paramètre
-        if ((argument != "--login") && (argument != "--password") && (argument != "--help") && (read == true))
+        if ((argument != "--login") && (argument != "--password") && (argument != "--help") && (argument != "--view") && (argument != "--hosts") && (read == true))
         {
             // Test du fichier
             ifstream fichier(argument.c_str(), ios::in); //ouverture en lecture
@@ -62,6 +65,15 @@ int main(int argc, char *argv[])
         }
         else { // Autre paramètre détecté => on arrête d'essayer l'ajout des fichier
             read = false;
+        }
+
+        // si --hosts a déjà été trouvé on tente d'ajouter l'argument suivant dns la liste sauf si il s'agit d'un autre paramètre
+        if ((argument != "--login") && (argument != "--password") && (argument != "--help") && (argument != "--view") && (argument != "--read") && (hosts == true))
+        {
+            listHosts.push_back(argument);
+        }
+        else { // Autre paramètre détecté => on arrête d'essayer l'ajout des hosts
+            hosts = false;
         }
 
         //Recherche de l'aide
@@ -95,23 +107,41 @@ int main(int argc, char *argv[])
         {
             read = true;
         }
+
+        //Recherche des hosts
+        found = argument.find("--hosts");
+        if (found != string::npos)
+        {
+            hosts = true;
+        }
+
+        //Recherche du paramètre de simulation d'upload
+        found = argument.find("--view");
+        if (found != string::npos)
+        {
+            viewOnly = true;
+        }
     }
 
     //list<string>::iterator it;
     //for (it=listeFichier.begin(); it!=listeFichier.end(); ++it)
     //            cout << " " << *it;
 
+    //list<string>::iterator it;
+    //    for (it=listHosts.begin(); it!=listHosts.end(); ++it)
+    //                cout << " " << *it;
+
     if ((login.size() != 0) && (password.size() != 0) && (listeFichier.size() != 0))
     {
         //cout << "Demarrage en mode connecte" << endl;
-        MainClass multiup(login, password, listeFichier);
+        MainClass multiup(login, password, viewOnly, listeFichier, listHosts);
         multiup.lancement();
         return 0;
     }
     else if ((login.size() == 0) && (password.size() == 0) && (listeFichier.size() != 0))
     {
         //cout << "Demarrage en mode anonyme" << endl;
-        MainClass multiup(listeFichier);
+        MainClass multiup(viewOnly, listeFichier, listHosts);
         multiup.lancement();
         return 0;
     }
@@ -126,9 +156,11 @@ void affichage_syntaxe(string nomApp)
 {
     cout << "Syntaxe:" << endl;
     cout << nomApp;
-    cout << " [options...] --read [\"fichier\" \"fichier\"...] [2>liens.txt]" << endl;
+    cout << " [options...] --read [\"fichier\" \"fichier\"...] --hosts [\"hebergeur\" \"hebergeur\"...] [2>liens.txt]" << endl;
 
     cout << endl << "Options:" << endl;
             cout << "\t--login <nom> --password <password>" << endl;
+            cout << "\t--view\t\tSimulation d'upload (verification des parametres)." << endl;
+            cout << "\t--hosts\t\tSpecifier une liste personnelle d'hebergeurs." << endl;
             cout << "\t[2>liens.txt]\tRedirige stderr pour avoir les liens uniquement." << endl << endl;
 }

@@ -24,43 +24,42 @@ using namespace std;
 
 // REVOIR ça ! structure globale dans tous les fichiers (extern) => très sale !
 struct Bricolage    bricolo;
-enum EtatConnexion  etatConnexion;
 
 
-MainClass::MainClass(const list<string> &listeFichiers)
+MainClass::MainClass(const bool viewOnly, const list<string> &listeFichiers, const std::list<string> &listeHosts)
 {
-    m_listeFichiers = listeFichiers;
-    m_connecte      = false;
+    m_listeFichiers     = listeFichiers;
+    m_connecte          = false;
+    m_viewOnly          = viewOnly;
+    m_listeHosts        = listeHosts;
 
-    bricolo.etape   = 1;
-
-    //lancement();
+    m_processingStep    = 1;
 }
 
-MainClass::MainClass(const string &login, const string &password, const list<string> &listeFichiers)
+MainClass::MainClass(const string &login, const string &password, const bool viewOnly, const list<string> &listeFichiers, const std::list<string> &listeHosts)
 {
-    m_login         = login;
-    m_password      = password;
+    m_login             = login;
+    m_password          = password;
 
-    m_listeFichiers = listeFichiers;
-    m_connecte      = true;
+    m_listeFichiers     = listeFichiers;
+    m_connecte          = true;
+    m_viewOnly          = viewOnly;
+    m_listeHosts        = listeHosts;
 
-    bricolo.etape   = 0;
+    m_processingStep   = 0;
 
-    // Etape de login ( bricolo.etape   = 0)
+    // Etape de login (m_processingStep = 0)
     connexion();
-
-    //lancement();
 }
 
 MainClass::~MainClass()
 {
-    // Pouet
+    // E.Valls's brain:
 }
 
 void MainClass::lancement()
 {
-    afficher();
+    //afficher();
 
     // Upload des fichiers les uns après les autres
     list<string>::iterator iterator;
@@ -68,14 +67,13 @@ void MainClass::lancement()
     {
         // Mémorise le fichier courant
         m_fichierEnCours = *iterator;
-        bricolo.fichierEnCours = *iterator;
         cout << "Fichier en cours d'up : " << m_fichierEnCours << endl;
 
         // Initialisation de la structure
-        bricolo.hebergeursListe.clear();
-        bricolo.etape = 1;
+        m_hebergeursListe.clear();
 
         // Début du traitement du fichier
+        m_processingStep = 1;
         connexion();
     }
     cout << "Fin du programme" << endl;
@@ -94,6 +92,9 @@ void MainClass::afficher()
 
 void MainClass::connexion()
 {
+    // Vidage du buffer remplit par le callback de Curl (CURLOPT_WRITEFUNCTION)
+    bricolo.dataBuffer = "";
+
     //---------- Curl
     CURLcode hResult;
 
@@ -114,7 +115,7 @@ void MainClass::connexion()
     m_hCurl = curl_easy_init();
 
     // Constitution des requêtes en fonction des étapes
-    if (bricolo.etape == 0) { // Connexion
+    if (m_processingStep == 0) { // Connexion
         curl_formadd(&m_post,
                      &m_last,
                      CURLFORM_COPYNAME,
@@ -136,7 +137,7 @@ void MainClass::connexion()
         //Progression désactivée
         hResult = curl_easy_setopt(m_hCurl, CURLOPT_NOPROGRESS, 1);
     }
-    else if (bricolo.etape == 1) { // Sélection du serveur
+    else if (m_processingStep == 1) { // Sélection du serveur
 
         //Specify the API Endpoint
         hResult = curl_easy_setopt(m_hCurl, CURLOPT_URL, URL_SELECTION_SERVEUR);
@@ -144,7 +145,7 @@ void MainClass::connexion()
         //Progression désactivée
         hResult = curl_easy_setopt(m_hCurl, CURLOPT_NOPROGRESS, 1);
     }
-    else if (bricolo.etape == 2) { // Récupération des hébergeurs
+    else if (m_processingStep == 2) { // Récupération des hébergeurs
 
         // Ajoute le nom d'utilisateur à la requête de curl (v2)
         if (m_connecte == true) {
@@ -170,28 +171,28 @@ void MainClass::connexion()
         //Progression désactivée
         hResult = curl_easy_setopt(m_hCurl, CURLOPT_NOPROGRESS, 1);
     }
-    else if (bricolo.etape == 3) { // Upload
+    else if (m_processingStep == 3) { // Upload
         // Ajoute le nom d'utilisateur à la requête de curl (v2)
         if (m_connecte == true) {
-            cout << "Curl :: Login : " << m_login << endl;
+            //cout << "Curl :: Login : " << m_login << endl;
 
             curl_formadd(&m_post,
                          &m_last,
                          CURLFORM_COPYNAME,
                          "user",
                          CURLFORM_COPYCONTENTS,
-                         bricolo.loginId.c_str(),
+                         m_loginId.c_str(),
                          CURLFORM_END);
         }
 
         list<string>::iterator iterator;
         string hebergeur;
-        for (iterator=bricolo.hebergeursListe.begin(); iterator!=bricolo.hebergeursListe.end(); ++iterator)
+        for (iterator=m_hebergeursListe.begin(); iterator!=m_hebergeursListe.end(); ++iterator)
         {
             // Désolé mais l'itérateur n'a pas la méthode c_str().. obligé de convertir en string...
             hebergeur = *iterator;
 
-            cout << "Curl :: Hebergeur : " << hebergeur << endl;
+            //cout << "Curl :: Hebergeur : " << hebergeur << endl;
 
             curl_formadd(&m_post,
                          &m_last,
@@ -212,7 +213,7 @@ void MainClass::connexion()
                      CURLFORM_END); // Apparait dans valgrind..
 
         //Specify the API Endpoint
-        hResult = curl_easy_setopt(m_hCurl, CURLOPT_URL, bricolo.adresseIp.c_str());
+        hResult = curl_easy_setopt(m_hCurl, CURLOPT_URL, m_fastestServerUrl.c_str());
 
         //Progression activée et fonction
         hResult = curl_easy_setopt(m_hCurl, CURLOPT_NOPROGRESS, 0);
@@ -226,7 +227,7 @@ void MainClass::connexion()
     hResult = curl_easy_setopt(m_hCurl, CURLOPT_USERAGENT, "User-Agent: Mozilla/5.0 (Windows NT 5.1; rv:10.0.2) Gecko/20100101 Firefox/10.0.2");
 
     //Specify the HTTP Method
-    if (bricolo.etape == 1) {
+    if (m_processingStep == 1) {
         hResult = curl_easy_setopt(m_hCurl, CURLOPT_HTTPGET, m_post);
     }
     else {
@@ -269,207 +270,275 @@ size_t MainClass::write_data(void *buffer, size_t size, size_t nmemb, void *user
     size_t nReal = size * nmemb;
     strmResponse << string((char*)buffer, nReal);
     string sLine("");
-    string temp;
 
     while (getline(strmResponse, sLine)) {
         //utiliser la surcharge += ? => si jamais la réponse fait plusieurs lignes ...
-        temp += sLine.c_str();
+        bricolo.dataBuffer += sLine.c_str();
     }
 
-    // V2 json
-    bool ok;
-    Json::Value root;   // will contains the root value after parsing.
-    Json::Reader reader;
+    //cout << "Curl :: Write data :: " << bricolo.dataBuffer << endl;
+    return nReal;
+}
 
-    if (bricolo.etape == 0) { // Connexion
-        ok = reader.parse(temp, root);
-        if (ok == true) {
-            // Récupération du statut
-            string objet = root.get("error", "").asString();
+MainClass::EtatConnexion MainClass::connectionDataProcessing()
+{
 
-            cout << "Connexion :: Statut : " << objet << endl;
-            if (objet == "success") {
-                // Succès certain
+    // will contain state of JSON parser
+    bool            parsing_state;
+    // will contain the root value after parsing
+    Json::Value     root;
+    Json::Reader    reader;
 
-                // Récupération de l'id
-                objet = convertIntToString( root.get("user", 0).asInt() );
-                //cout << "Connexion :: Id utilisateur : " << objet << endl;
-                bricolo.loginId = objet;
-                etatConnexion = Ok;
-            }
-            else {
-                //"bad username OR bad password"
-                // Echec certain
-                etatConnexion = Bad;
-            }
+    parsing_state = reader.parse(bricolo.dataBuffer, root);
+
+    if (parsing_state == true) {
+        // Récupération du statut
+        string objet = root.get("error", "").asString();
+
+        //cout << "Connexion :: Statut : " << objet << endl;
+        if (objet == "success") {
+            // Succès certain
+
+            // Récupération de l'id
+            m_loginId = root.get("user", 0).asString();
+            //cout << "Connexion :: Id utilisateur : " << m_loginId << endl;
+
+            return EtatConnexion::Ok;
         }
         else {
-            // report to the user the failure and their locations in the document.
-            cout  << "Failed to parse configuration\n"
-                  << reader.getFormattedErrorMessages()
-                  << root;
-            etatConnexion = Error;
+            //"bad username OR bad password"
+            // Echec certain
+            return EtatConnexion::Bad;
         }
     }
-    else if (bricolo.etape == 1) { // Sélection du serveur
-        ok = reader.parse(temp, root);
-        if (ok == true) {
-            // Récupération du statut
-            string objet = root.get("error", "").asString();
-
-            cout << "SelectionServeur :: Statut : " << objet << endl;
-            if (objet == "success") {
-                // Succès certain
-                bricolo.adresseIp = root.get("server", "").asString();
-
-                cout << "SelectionServeur :: Serveur " << bricolo.adresseIp  << " trouve !" << endl;
-                etatConnexion = Ok;
-            }
-            else {
-                // Echec certain
-                etatConnexion = Bad;
-            }
-        }
-        else {
-            // report to the user the failure and their locations in the document.
-            cout  << "Failed to parse configuration\n"
-                  << reader.getFormattedErrorMessages()
-                  << root;
-            etatConnexion = Error;
-        }
+    else {
+        // report to the user the failure and their locations in the document.
+        cout  << "Failed to parse configuration\n"
+              << reader.getFormattedErrorMessages() + '\n'
+              << root;
+        return EtatConnexion::Error;
     }
-    else if (bricolo.etape == 2) { // Récupération des hébergeurs
-        cout << temp << endl;
-        cout << "taille chaine: "<< temp.size() << endl;
-        ok = reader.parse(temp, root);
-        if (ok == true) {
-            // Récupération du statut
-            string objet = root.get("error", "").asString();
+}
 
-            cout << "Hebergeurs :: Statut : " << objet << endl;
+MainClass::EtatConnexion MainClass::fastestServerDataProcessing()
+{
+    // will contain state of JSON parser
+    bool            parsing_state;
+    // will contain the root value after parsing
+    Json::Value     root;
+    Json::Reader    reader;
 
-            if (objet == "success") {
-                // Succès certain
-                /* V4
-                {
-                    "error":"success",
-                    "hosts":
-                            {
-                                "1fichier.com": {
-                                                    "selected":"true",
-                                                    "size":5120
-                                                },
-                                "easybytez.com":{
-                                                    "selected":"false",
-                                                    "size":5120
-                                                }
-                            },
-                    "default":
-                            [
-                                "dl.free.fr",
-                                "uptobox.com",
-                            ],
-                    "maxHosts":18
-                }
-                */
+    parsing_state = reader.parse(bricolo.dataBuffer, root);
 
-                vector<string> members = root["hosts"].getMemberNames();
-                vector<string>::iterator iterator;
+    if (parsing_state == true) {
+        // Récupération du statut
+        string objet = root.get("error", "").asString();
 
-                // Récupération de la taille du fichier courant
-                std::streampos fileSize = getFileSize(bricolo.fichierEnCours);
+        //cout << "SelectionServeur :: Statut : " << objet << endl;
+        if (objet == "success") {
+            // Succès certain
+            m_fastestServerUrl = root.get("server", "").asString();
 
-                for (iterator=members.begin(); iterator!=members.end(); ++iterator)
-                {
-                    /* La liste des hébergeurs et leurs états doit être sur 2 colonnes
-                     * nomHébergeur tailleMax [etat]; nomHébergeur tailleMax [etat];
-                     *
-                     * Mise en forme : http://en.cppreference.com/w/cpp/io/manip/setw
-                     * stew() définit le nombre de caractères de l'élément qui suit
-                     * left permet d'aligner à gauche l'élément qui suit (par défaut à droite)
-                     */
-
-                    // Nom1
-                    cout << setw(20) << left << *iterator;
-                    // Etat1
-                    bool ret = webhostParsing(root["hosts"][*iterator], fileSize);
-                    // Hébergeur1 autorisé
-                    if (ret)
-                        bricolo.hebergeursListe.push_back(*iterator);
-
-                    // Hébergeur suivant
-                    ++iterator;
-                    if (iterator == members.end()) {
-                        cout << endl;
-                        break;
-                    }
-
-                    // Nom2
-                    cout << setw(10) << ' '
-                         << setw(20) << *iterator;
-                    // Etat2
-                    ret = webhostParsing(root["hosts"][*iterator], fileSize);
-                    cout << endl;
-                    // Hébergeur2 autorisé
-                    if (ret)
-                        bricolo.hebergeursListe.push_back(*iterator);
-                }
-
-                cout << "Hebergeurs :: Nombre selectionnes : " << bricolo.hebergeursListe.size() << endl;
-
-                etatConnexion = Ok;
-            }
-            else {
-                // Echec certain
-                etatConnexion = Bad;
-            }
-        }
-        else {
-            // report to the user the failure and their locations in the document.
-            cout  << "Failed to parse configuration\n"
-                  << reader.getFormattedErrorMessages()
-                  << root;
-            etatConnexion = Error;
-        }
-    }
-    else if (bricolo.etape == 3) { // Upload
-        // Suppression de [,] aux extremite pour transformer l'array en objet
-        /*
-        temp.remove(0,1);
-        temp.remove(temp.size()-1,1);
-        */
-
-        temp.erase(0, 1);
-        temp.erase(temp.size()-1, 1);
-
-        ok = reader.parse(temp, root);
-        if (ok == true) {
-            // Récupération du statut
-            string objet = root.get("url", "").asString();
-
-            cout << endl << "Upload :: Lien : ";
-            cerr << objet << endl;
-
-            bricolo.lien = objet;
-
-            objet = root.get("delete_url", "").asString();
-            cout << "Upload :: LienDelete : ";
-            cerr << objet << endl;
-
-            bricolo.lienDelete = objet;
-            etatConnexion = Ok;
+            //cout << "SelectionServeur :: Serveur " << m_fastestServerUrl  << " trouve !" << endl;
+            return EtatConnexion::Ok;
         }
         else {
             // Echec certain
-            etatConnexion = Bad;
-            // PS: pas d'objet "error" ici..
-            // report to the user the failure and their locations in the document.
-            cout << "Failed to parse configuration\n"
-                 << reader.getFormattedErrorMessages();
+            return EtatConnexion::Bad;
         }
     }
-    return nReal;
+    else {
+        // report to the user the failure and their locations in the document.
+        cout  << "Failed to parse configuration\n"
+              << reader.getFormattedErrorMessages() + '\n'
+              << root;
+        return EtatConnexion::Error;
+    }
 }
+
+MainClass::EtatConnexion MainClass::webhostsDataProcessing()
+{
+
+    // will contain state of JSON parser
+    bool            parsing_state;
+    // will contain the root value after parsing
+    Json::Value     root;
+    Json::Reader    reader;
+
+    parsing_state = reader.parse(bricolo.dataBuffer, root);
+
+    if (parsing_state == true) {
+        // Récupération du statut
+        string objet = root.get("error", "").asString();
+
+        //cout << "Hebergeurs :: Statut : " << objet << endl;
+
+        if (objet == "success") {
+            // Succès certain
+            /* Objet "hosts":
+            {
+                "error":"success",
+                "hosts":
+                        {
+                            "1fichier.com": {
+                                                "selected":"true",
+                                                "size":5120
+                                            },
+                            "easybytez.com":{
+                                                "selected":"false",
+                                                "size":5120
+                                            }
+                        },
+                "default":
+                        [
+                            "dl.free.fr",
+                            "uptobox.com",
+                        ],
+                "maxHosts":18
+            }
+            */
+            cout << "Selectionne : [" << putInGreen("true") << "]; "
+                 << "Deselectionne : [" << putInRed("false") << "]; "
+                 << "Taille excessive : [" << putBgInRed("false") << "];"
+                 << endl;
+
+            vector<string> members = root["hosts"].getMemberNames();
+            vector<string>::iterator iterator;
+
+
+            // Recherche des hébergeurs spécifiés manuellement.
+            if (m_listeHosts.size()) {
+                for (iterator=members.begin(); iterator!=members.end(); ++iterator)
+                {
+                    bool found = (std::find(m_listeHosts.begin(), m_listeHosts.end(), *iterator) != m_listeHosts.end());
+
+                    // Si un hébergeur officiel n'est pas dans la liste manuelle => on le passe à false
+                    // Sinon on l'active => passe à true
+                    if (!found)
+                        root["hosts"][*iterator]["selected"] = "false";
+                    else
+                        root["hosts"][*iterator]["selected"] = "true";
+                }
+            }
+
+
+            // Récupération de la taille du fichier courant
+            std::streampos fileSize = getFileSize(m_fichierEnCours);
+
+            for (iterator=members.begin(); iterator!=members.end(); ++iterator)
+            {
+                /* La liste des hébergeurs et leurs états doit être sur 2 colonnes
+                 * nomHébergeur tailleMax [etat]; nomHébergeur tailleMax [etat];
+                 *
+                 * Mise en forme : http://en.cppreference.com/w/cpp/io/manip/setw
+                 * stew() définit le nombre de caractères de l'élément qui suit
+                 * left permet d'aligner à gauche l'élément qui suit (par défaut à droite)
+                 */
+
+                // Nom1
+                cout << setw(20) << left << *iterator;
+                // Etat1
+                bool ret = webhostParsing(root["hosts"][*iterator], fileSize);
+                // Hébergeur1 autorisé
+                if (ret)
+                    m_hebergeursListe.push_back(*iterator);
+
+                // Hébergeur suivant
+                ++iterator;
+                if (iterator == members.end()) {
+                    cout << endl;
+                    break;
+                }
+
+                // Nom2
+                cout << setw(10) << ' '
+                     << setw(20) << *iterator;
+                // Etat2
+                ret = webhostParsing(root["hosts"][*iterator], fileSize);
+                cout << endl;
+                // Hébergeur2 autorisé
+                if (ret)
+                    m_hebergeursListe.push_back(*iterator);
+            }
+
+            // Transtypage pour la comparaison juste après...
+            std::vector<int>::size_type maxHosts = (std::vector<int>::size_type)root.get("maxHosts", 100).asInt();
+            cout << "Hebergeurs :: Nombre selectionnes : " << m_hebergeursListe.size() << '/' << maxHosts << endl;
+
+            if (m_hebergeursListe.size() > maxHosts)
+                cout << "Hebergeurs :: /!\\ Trop d'hebergeurs selectionnes : Resultats non garantis" << endl;
+
+            return EtatConnexion::Ok;
+        }
+        else {
+            // Echec certain
+            return EtatConnexion::Bad;
+        }
+    }
+    else {
+        // report to the user the failure and their locations in the document.
+        cout  << "Failed to parse configuration\n"
+              << reader.getFormattedErrorMessages() + '\n'
+              << root;
+        return EtatConnexion::Error;
+    }
+}
+
+MainClass::EtatConnexion MainClass::uploadDataProcessing()
+{
+
+    // will contain state of JSON parser
+    bool            parsing_state;
+    // will contain the root value after parsing
+    Json::Value     root;
+    Json::Reader    reader;
+
+    // Suppression de [,] aux extremite pour transformer l'array en objet JSON correct...
+    /*
+      [
+        {
+                "delete_type" : "DELETE",
+                "delete_url" : "http://barbie.multiup.org/upload/?file=test.txt",
+                "hash" : "7de6e976e6e8bd7183bf008e39f20d9e",
+                "hashUpload" : "",
+                "md5" : ".",
+                "name" : "test.txt",
+                "sha" : ".",
+                "sid" : "",
+                "size" : 7,
+                "type" : "text/plain",
+                "url" : "http://www.multiup.org/download/7de6e976e6e8bd7183bf008e39f20d9e/test.txt",
+                "user" : "1111"
+        }
+      ]
+    */
+    bricolo.dataBuffer.erase(0, 1);
+    bricolo.dataBuffer.erase(bricolo.dataBuffer.size()-1, 1);
+
+    parsing_state = reader.parse(bricolo.dataBuffer, root);
+
+    if (parsing_state == true) {
+        // Récupération du statut
+        m_finalLink = root.get("url", "").asString();
+
+        // Affichage sur std et stderr
+        cout << endl << "Upload :: Lien : ";
+        cerr << m_finalLink << endl;
+
+        return EtatConnexion::Ok;
+    }
+    else {
+        // Echec certain
+        return EtatConnexion::Bad;
+        // PS: pas d'objet "error" ici..
+        // report to the user the failure and their locations in the document.
+        cout << "Failed to parse configuration\n"
+             << reader.getFormattedErrorMessages() + '\n'
+             << root
+             << endl;
+    }
+}
+
 
 void MainClass::finProcedure(CURLcode hResult)
 {
@@ -482,19 +551,24 @@ void MainClass::finProcedure(CURLcode hResult)
                                         break;
     }
 
-    if (bricolo.etape == 0) {
+    if (m_processingStep == 0) {
+        EtatConnexion etatConnexion = connectionDataProcessing();
+
         switch(etatConnexion)
         {
-            case Bad:   cout << "Connexion :: Mauvais login ou mauvais mot de passe => Upload Anonyme" << endl;
+            case EtatConnexion::Bad:
+                        cout << "Connexion :: Mauvais login ou mauvais mot de passe => Upload Anonyme" << endl;
                         m_connecte = false;
                         break;
 
-            case Ok:    cout << "Connexion :: Upload en tant que " << m_login << endl;
+            case EtatConnexion::Ok:
+                        cout << "Connexion :: Upload en tant que " << m_login << endl;
                         // Pas de destruction car le processus va tenter de lui meme une obtention des droits sur debridpowa
                         m_connecte = true;
                         break;
 
-            default:    cout << "Connexion :: Verifiez votre connexion internet ou la disponibilite du site... => Upload Anonyme" << endl;
+            default:
+                        cout << "Connexion :: Verifiez votre connexion internet ou la disponibilite du site... => Upload Anonyme" << endl;
                         m_connecte = false;
                         // on arrete pas le programme car le login n'est pas obligatoire;
                         //même si dans ce cas on sait très bien que la liaison avec le site a un problème...
@@ -502,49 +576,67 @@ void MainClass::finProcedure(CURLcode hResult)
         }
         return;
     }
-    else if (bricolo.etape == 1) {
+    else if (m_processingStep == 1) {
+        EtatConnexion etatConnexion = fastestServerDataProcessing();
+
         switch (etatConnexion) {
 
-            case Bad:   cout << "SelectionServeur :: Pas d'adresse IP trouvee" << endl;
+            case EtatConnexion::Bad:
+                        cout << "SelectionServeur :: Pas de serveur trouve" << endl;
                         return;
                         break;
 
-            case Ok:    //cout << "SelectionServeur :: Adresse IP trouvee" << endl;
+            case EtatConnexion::Ok:
+                        //cout << "SelectionServeur :: Serveur trouve" << endl;
                         break;
 
             default:    cout << "SelectionServeur :: Erreur inconnue" << endl;
                         return;
                         break;
         }
-        bricolo.etape++;
+        m_processingStep++;
         connexion();
         return;
     }
-    else if (bricolo.etape == 2) {
+    else if (m_processingStep == 2) {
+        EtatConnexion etatConnexion = webhostsDataProcessing();
+
         switch (etatConnexion) {
 
-            case Bad:   cout << "Hebergeurs :: Pas d'hebergeurs trouves" << endl;
+            case EtatConnexion::Bad:
+                        cout << "Hebergeurs :: Pas d'hebergeurs trouves" << endl;
                         return;
                         break;
 
-            case Ok:    //cout << "Hebergeurs :: trouves" << endl;
+            case EtatConnexion::Ok:
+                        //cout << "Hebergeurs :: trouves" << endl;
                         break;
 
             default:    cout << "Hebergeurs :: Erreur inconnue" << endl;
                         return;
                         break;
         }
-        bricolo.etape++;
+
+        if (m_viewOnly) {
+            cout << "Fin de simulation pour ce fichier" << endl << endl;
+            return;
+        }
+
+        m_processingStep++;
         connexion();
         return;
     }
-    else if (bricolo.etape == 3) {
+    else if (m_processingStep == 3) {
+        EtatConnexion etatConnexion = uploadDataProcessing();
+
         switch (etatConnexion) {
 
-            case Bad:   cout << endl << "Upload :: Pas d'url trouvee" << endl << endl;
+            case EtatConnexion::Bad:
+                        cout << endl << "Upload :: Pas d'url trouvee" << endl << endl;
                         break;
 
-            case Ok:    cout << endl << "Upload :: Termine" << endl << endl;
+            case EtatConnexion::Ok:
+                        cout << endl << "Upload :: Termine" << endl << endl;
                         break;
 
             default:    cout << endl << "Upload :: Erreur inconnue" << endl << endl;

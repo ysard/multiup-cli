@@ -25,6 +25,7 @@ This file is part of multiup_cli.
 #include <sstream>
 #include <string>
 //#include <iostream>
+#include <algorithm>
 #include <iomanip>
 #include <fstream>
 #include <list>
@@ -40,21 +41,8 @@ This file is part of multiup_cli.
 
 struct Bricolage
 {
-    int etape;
-    std::string loginId;
-    std::string adresseIp;
-    std::list<std::string> hebergeursListe;
-    std::string fichierEnCours;
-
-    std::string lien;
-    std::string lienDelete;
+    std::string dataBuffer;
 };
-
-enum EtatConnexion
-{
-    Bad, Ok, Error
-};
-
 
 
 std::streampos getFileSize(const std::string& filename);
@@ -65,25 +53,54 @@ class MainClass
 {
 
 public:
-    MainClass(const std::list<std::string> &listeFichiers); //consructeur par def
-    MainClass(const std::string &login, const std::string &password, const std::list<std::string> &listeFichiers); //consructeur si identifiants
+    enum class EtatConnexion
+    {
+        Bad, Ok, Error
+    };
+
+    //consructeur par def
+    MainClass(const bool viewOnly,
+              const std::list<std::string> &listeFichiers,
+              const std::list<std::string> &listeHosts);
+    //consructeur si identifiants
+    MainClass(const std::string &login,
+              const std::string &password,
+              const bool viewOnly,
+              const std::list<std::string> &listeFichiers,
+              const std::list<std::string> &listeHosts);
     virtual ~MainClass();
+
     static int progress_func(void *ptr, double TotalToDownload, double NowDownloaded, double TotalToUpload, double NowUploaded);
     static size_t write_data(void *buffer, size_t size, size_t nmemb, void *userdata);
+
     void lancement();
     void afficher();
     void connexion();
-
     void finProcedure(CURLcode hResult);
 
 
 private:
+    EtatConnexion connectionDataProcessing();
+    EtatConnexion fastestServerDataProcessing();
+    EtatConnexion webhostsDataProcessing();
+    EtatConnexion uploadDataProcessing();
+
     std::string             m_login;
+    std::string             m_loginId;
     std::string             m_password;
+    bool                    m_connecte;
+    bool                    m_viewOnly;
+
+    std::string             m_fastestServerUrl;
+
+    std::list<std::string>  m_hebergeursListe;
     std::list<std::string>  m_listeFichiers;
+    std::list<std::string>  m_listeHosts;
     std::string             m_fichierEnCours;
 
-    bool                    m_connecte;
+    std::string             m_finalLink;
+
+    int                     m_processingStep;
     CURL                    *m_hCurl;
     struct curl_httppost    *m_post;
     struct curl_httppost    *m_last;
