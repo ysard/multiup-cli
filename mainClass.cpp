@@ -397,10 +397,21 @@ MainClass::EtatConnexion MainClass::webhostsDataProcessing()
                 "maxHosts":18
             }
             */
+#ifdef WINDOWS
+            cout << "Selectionne : [";
+            putInGreen("true");
+            cout << "]; Deselectionne : [";
+            putInRed("false");
+            cout  << "]; Taille excessive : [";
+            putBgInRed("false");
+            cout << "];"
+                 << endl;
+#else
             cout << "Selectionne : [" << putInGreen("true") << "]; "
                  << "Deselectionne : [" << putInRed("false") << "]; "
                  << "Taille excessive : [" << putBgInRed("false") << "];"
                  << endl;
+#endif
 
             vector<string> members = root["hosts"].getMemberNames();
             vector<string>::iterator iterator;
@@ -436,7 +447,7 @@ MainClass::EtatConnexion MainClass::webhostsDataProcessing()
                  */
 
                 // Nom1
-                cout << setw(20) << left << *iterator;
+                cout << setw(19) << left << *iterator;
                 // Etat1
                 bool ret = webhostParsing(root["hosts"][*iterator], fileSize);
                 // Hébergeur1 autorisé
@@ -451,8 +462,8 @@ MainClass::EtatConnexion MainClass::webhostsDataProcessing()
                 }
 
                 // Nom2
-                cout << setw(10) << ' '
-                     << setw(20) << *iterator;
+                cout << setw(6) << ' '
+                     << setw(19) << *iterator;
                 // Etat2
                 ret = webhostParsing(root["hosts"][*iterator], fileSize);
                 cout << endl;
@@ -668,22 +679,43 @@ bool webhostParsing(const Json::Value webhost, const std::streampos file_size)
          << setw(5) << left << " Mo";
 
     if (selection_state == "false") {
-        // Hébergeur désélectionné => False
+        // Hébergeur désélectionné => False => lettres rouges
+#ifdef WINDOWS
+        cout << '[';
+        putInRed(selection_state);
+        cout << ']'
+             << setw(3) << ';';
+#else
         cout << setw(10) << '[' + putInRed(selection_state) + ']'
              << setw(3) << ';';
+#endif
         return false;
 
     } else {
         // Vérification de la taille autorisée
         if (file_size > (std::streampos)(max_upload_size * 1024*1024)) {
-            // Taille de fichier excessive => False
+            // Taille de fichier excessive => False => fond rouge
+#ifdef WINDOWS
+            cout << '[';
+            putBgInRed("false");
+            cout << ']'
+                 << setw(3) << ';';
+#else
             cout << setw(10) << '[' + putBgInRed("false") + ']'
                  << setw(3) << ';';
+#endif
             return false;
         } else {
-            // Taille de fichier correcte => True
+            // Taille de fichier correcte => True => lettres vertes
+#ifdef WINDOWS
+            cout << '[';
+            putInGreen(selection_state + ' ');
+            cout << ']'
+                 << setw(3) << ';';
+#else
             cout << setw(10) << '[' + putInGreen(selection_state + ' ') + ']'
                  << setw(3) << ';';
+#endif
             return true;
         }
     }

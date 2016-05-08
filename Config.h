@@ -13,7 +13,7 @@ This file is part of multiup_cli.
 
     You should have received a copy of the GNU General Public License
     along with multiup_cli.  If not, see <http://www.gnu.org/licenses/>.
-    
+
     Copyright 2013 Lex
     www.multiup.org
 */
@@ -21,8 +21,10 @@ This file is part of multiup_cli.
 #ifndef CONFIG_H
 #define CONFIG_H
 
+
 //#define WINDOWS
 #define LINUX
+
 
 #define VERSION "0.4.0"
 

@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     bool viewOnly = false;
 
     cout << "Multiup MaNaGer CLI v" << VERSION << " - Copyright 2013-2015 Lex - Bienvenue !" << endl << endl;
-    cout << "\tPour des fonctionnalites plus evoluees, veuillez vous diriger vers \"Multiup MaNaGer GUI\",\n\tdisponible sur le site..." << endl << endl;
+    cout << "\tPour des fonctionnalites plus evoluees, \n\tveuillez vous diriger vers \"Multiup MaNaGer GUI\",\n\tdisponible sur le site..." << endl << endl;
 
     std::size_t found;
 

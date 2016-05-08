@@ -16,23 +16,71 @@
 #    Copyright 2013 Lex
 #    www.multiup.org
 
-cmake_minimum_required(VERSION 2.6) # Pour éviter un warning au lancement de CMake, on doit préciser la version minimale
+cmake_minimum_required(VERSION 3.0) # Pour éviter un warning au lancement de CMake, on doit préciser la version minimale
 
 # Nom du projet
-project(multiup_cli)
+project(multiup-cli)
 
 # Librairies
 if(WIN32)
-	# curl
-      set(curl_lib_name libcurl.lib)
-      set(curl_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.29-nmake/lib/)
-	  set(curl_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.29-nmake/include/)
+	if(CMAKE_COMPILER_IS_GNUCXX)
+		# For g++/gcc compiler (mingw32)
+		# curl
+		set(curl_lib_name libcurl.a)
+		set(curl_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.28.1-devel-mingw32/lib/)
+		set(curl_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.28.1-devel-mingw32/include/)
+	
+	else()
+		# For Visual Studio etc compiler
+		# curl
+		#set(curl_lib_name libcurl.lib)
+		#set(curl_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.29-nmake/lib/)
+		#set(curl_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.29-nmake/include/)
+		
+		set(curl_lib_name libcurl_a.lib)
+		set(curl_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-devel-nmake/lib/)
+		set(curl_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-devel-nmake/include/)
+	endif()
+endif()
 
-      # jsoncpp
-      set(jsoncpp_lib_name json_vc71_libmt.lib)
-      set(jsoncpp_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/jsoncpp-static-msvc/lib/)
-      set(jsoncpp_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/jsoncpp-static-msvc/include/)
-	  
+if(UNIX)
+	if(${CMAKE_SYSTEM_PROCESSOR} MATCHES armv6l)
+		# Raspberry pi
+		# curl
+		set(curl_lib_name curl)
+		set(curl_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-armv6l/lib/)
+		set(curl_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-armv6l/include/)
+
+	else()
+		# Autres systèmes unix
+		# curl
+		set(curl_lib_name curl)
+		set(curl_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-devel-unix-static/lib/)
+		set(curl_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-devel-unix-static/include/)
+	endif()
+endif()
+
+# Compilers FLAGS (c++ 11 & linker options)
+if(CMAKE_COMPILER_IS_GNUCXX)
+	# For g++/gcc compiler (mingw32)
+	
+	MESSAGE(STATUS "Activation c++11")
+	#autre syntaxe: add_definitions(-std=gnu++0x)
+	
+	include(CheckCXXCompilerFlag)
+	CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+	CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+	if(COMPILER_SUPPORTS_CXX11)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+	elseif(COMPILER_SUPPORTS_CXX0X)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+	else()
+			message(WARNING "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+	endif()
+else()
+	# For Visual Studio etc compiler
+	# MSVC does not require any special flags for c++11
+	
 	# Optimisation de l'éditeur de lien pour les librairies statiques
 	#sinon => json_vc71_libmt.lib(json_value.obj) : .netmodule ou module MSIL compilé avec /GL
 	#trouvée; redémarrage de l'édition de liens avec /LTCG;
@@ -41,46 +89,18 @@ if(WIN32)
 	ADD_DEFINITIONS(-D_HAS_ITERATOR_DEBUGGING=0)
 endif()
 
-if(UNIX)
-      if(${CMAKE_SYSTEM_PROCESSOR} MATCHES armv6l) # Raspberry pi
-			# curl
-			set(curl_lib_name curl)
-			set(curl_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.40.0-armv6l/lib/.libs/)
-			set(curl_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.40.0-armv6l/include/)
-
-			# jsoncpp
-			set(jsoncpp_lib_name json_linux-gcc-4.4.3_libmt)
-			set(jsoncpp_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/jsoncpp-static-armv6l/lib/)
-			set(jsoncpp_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/jsoncpp-static-armv6l/include/)
-	  else() # Autres systèmes unix
-			# curl
-			set(curl_lib_name curl)
-			set(curl_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.28.1-devel-unix-static/lib/)
-			set(curl_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.28.1-devel-unix-static/include/)
-
-			# jsoncpp
-			set(jsoncpp_lib_name json_linux-gcc-4.4.3_libmt)
-			set(jsoncpp_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/jsoncpp-static-unix/lib/)
-			set(jsoncpp_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/jsoncpp-static-unix/include/)
-	  endif()
-endif()
-
 include_directories(${curl_include_dir})
-include_directories(${jsoncpp_include_dir})
 #link_directories(${jsoncpp_lib_dir}) #=> foireux ! déconseillé dans la doc et en tuto sur le sdz !
-#link_directories(${curl_lib_dir})
 find_library(CURL_LIB ${curl_lib_name} ${curl_lib_dir} NO_DEFAULT_PATH)
 #NO_DEFAULT_PATH évite que la recherche s'arrete dès que la lib du système a été trouvée (surtout sur linux)
-find_library(JSONCPP_LIB ${jsoncpp_lib_name} ${jsoncpp_lib_dir})
+
 
 MESSAGE(STATUS "Cmake prefix: ${CMAKE_SOURCE_DIR}")
 MESSAGE(STATUS "Curl libraries at: ${curl_lib_dir}")
-MESSAGE(STATUS "Jsoncpp libraries at: ${jsoncpp_lib_dir}")
 MESSAGE(STATUS "Curl libraries found at: ${CURL_LIB}")
-MESSAGE(STATUS "Jsoncpp libraries found at: ${JSONCPP_LIB}")
 
-
-# Preprocessor definitions for this target. IMPORTANT ! sinon ça link en shared et pas en static
+# Preprocessor definitions for this target. 
+# IMPORTANT ! sinon ça link en shared et pas en static
 add_definitions(-DCURL_STATICLIB)
 
 # Ajouter toutes les sources dans le dossier (variable source_files)
@@ -95,18 +115,21 @@ add_definitions(-DCURL_STATICLIB)
 
 # Déclaration de l'exécutable
 add_executable(
-      multiup_cli #Target names may not contain slashes. This is not a supported use case.
+      multiup-cli #Target names may not contain slashes. This is not a supported use case.
       ../main.cpp
       ../mainClass.h
       ../mainClass.cpp
+	  ../colors_in_the_shell.h
+	  ../colors_in_the_shell.cpp
       ../Config.h
+	  
+	  ../dependances-developpement/jsoncpp/dist/json/json.h
+	  ../dependances-developpement/jsoncpp/dist/json/json-forwards.h
+	  ../dependances-developpement/jsoncpp/dist/jsoncpp.cpp
 )
 
 target_link_libraries(
-      multiup_cli
-      #${jsoncpp_lib_name}
-      #${curl_lib_name}
-	  ${JSONCPP_LIB}
+      multiup-cli
       ${CURL_LIB}
 )
 
@@ -115,11 +138,11 @@ set(CMAKE_BUILD_TYPE "Release")
 
 # Installation
 if(UNIX)
-	INSTALL(TARGETS multiup_cli DESTINATION ${INSTALL_DIR}/bin)
+	INSTALL(TARGETS multiup-cli DESTINATION ${INSTALL_DIR}/bin)
 endif()
 
 if(WIN32)
-	INSTALL(TARGETS multiup_cli DESTINATION c:/windows/)
+	#INSTALL(TARGETS multiup-cli DESTINATION c:/windows/)
 endif()
 
 

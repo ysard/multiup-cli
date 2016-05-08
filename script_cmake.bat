@@ -35,7 +35,7 @@ nmake
 
 
 :: analyse mémoire
-::drmemory -logdir ./logs -- "./Release/multiup_cli.exe"
+::drmemory -logdir ./logs -- "./Release/multiup-cli.exe"
 
 :: exécution
-"./Release/multiup_cli.exe"
+"./Release/multiup-cli.exe"

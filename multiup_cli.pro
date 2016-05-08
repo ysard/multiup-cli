@@ -23,10 +23,6 @@
 #-------------------------------------------------
 
 CONFIG -= qt
-
-#QT       += core
-#QT       -= gui
-
 TARGET = multiup-cli
 CONFIG += console
 CONFIG += c++11
@@ -36,19 +32,20 @@ TEMPLATE = app
 
 #CURL unix
 #unix:INCLUDEPATH += /usr/include/curl
-unix:INCLUDEPATH += ./dependances-developpement/curl-7.44.0-devel-unix-static/include
-unix:LIBS += -L"./dependances-developpement/curl-7.44.0-devel-unix-static/lib"
-unix:LIBS += -lcurl
+unix:INCLUDEPATH    += ./dependances-developpement/curl-7.44.0-devel-unix-static/include
+unix:LIBS           += -L"./dependances-developpement/curl-7.44.0-devel-unix-static/lib"
+unix:LIBS           += -lcurl
 #  -lidn -lssl -lcrypto -lz
 #-lidn -lssl -lcrypto -lrt -lssl -lz -lrtmp (selon les restrictions lors de la compilation de curl..)
 
 
 #CURL windows
 # Avec mingw32 :
-win32:INCLUDEPATH += .\dependances-developpement\curl-7.28.1-devel-mingw32\include
-win32:LIBS += -L".\dependances-developpement\curl-7.28.1-devel-mingw32\lib"
+win32:INCLUDEPATH   += D:\Projets\multiup\multiup_cli\dependances-developpement\curl-7.28.1-devel-mingw32\include
+win32:INCLUDEPATH   += D:\Projets\multiup\multiup_cli\dependances-developpement\curl-7.28.1-devel-mingw32\include\curl
+win32:LIBS          += -L"D:\Projets\multiup\multiup_cli\dependances-developpement\curl-7.28.1-devel-mingw32\lib"
 #revoir la lib ici..-lws2_32  ptetre aussi... -lwldap32 ??
-win32:LIBS += -lcurl -lwldap32 -lws2_32
+win32:LIBS          += -lcurl -lwldap32 -lws2_32
 
 
 # Pour les libraries CURL en static
@@ -57,20 +54,15 @@ DEFINES += HTTP_ONLY
 
 
 #JSON CPP
-# Avec mingw32 :
-win32:INCLUDEPATH += .\dependances-developpement\jsoncpp-static-mingw32\include
-win32:LIBS += -L".\dependances-developpement\jsoncpp-static-mingw32\lib" -ljson_mingw_libmt
-
-#unix:INCLUDEPATH += ./dependances-developpement/jsoncpp-static-unix/include
-#unix:LIBS += -L"./dependances-developpement/jsoncpp-static-unix/lib" -ljson_linux-gcc-4.4.3_libmt
+# amalgamate
 
 SOURCES +=  main.cpp \
             mainClass.cpp \
-    dependances-developpement/jsoncpp/dist/jsoncpp.cpp \
-    colors_in_the_shell.cpp
+            dependances-developpement/jsoncpp/dist/jsoncpp.cpp \
+            colors_in_the_shell.cpp
 
 HEADERS +=  mainClass.h \
             Config.h \
-    dependances-developpement/jsoncpp/dist/json/json-forwards.h \
-    dependances-developpement/jsoncpp/dist/json/json.h \
-    colors_in_the_shell.h
+            dependances-developpement/jsoncpp/dist/json/json-forwards.h \
+            dependances-developpement/jsoncpp/dist/json/json.h \
+            colors_in_the_shell.h

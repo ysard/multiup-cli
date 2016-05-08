@@ -63,11 +63,13 @@ Compilation sous Linux/GNU (ubuntu) :
 De manière générale, l'application générée se trouvera dans /build
 
 Si nécessité de modifier les répertoires des librairies linkées (changement de compilateur : mingw32/msvc/gcc++)
-=> éditer en conséquence CMakeCache.txt
+=> éditer en conséquence CMakeCache.txt/CMakeLists.txt
 
 _______________________________________________________________________________________________
 Compilation des librairies:
 jsoncpp (d'après le README des sources):
+/!\ => tuto dépassé suite au passage de la version 0.6 à 1.6.5 de jsoncpp :
+La librairie est compilée comme faisant partie du projet grâce à almalgamate (voir https://github.com/open-source-parsers/jsoncpp )/!\
 	Installer scons: 
 		apt-get install scons
 	Compiler pour la plateforme:
@@ -80,3 +82,5 @@ curl:
 	
 	La librairie se trouve maintenant dans ./libs/.libs/ (libs contient les librairies la et lo)
 	
+	/!\ La compilation de la librairie depuis la version 7.29 pose problème. 
+	Les récentes versions (7.38) ne supportent pas la compilation sous Windows (la 7.44 refuse la compilation static) /!\
