@@ -14,7 +14,7 @@ This file is part of multiup_cli.
     You should have received a copy of the GNU General Public License
     along with multiup_cli.  If not, see <http://www.gnu.org/licenses/>.
     
-    Copyright 2013 Lex
+    Copyright 2013-2016 Lex
     www.multiup.org
 */
 
@@ -131,7 +131,7 @@ void MainClass::connection()
                      CURLFORM_END);
 
         //Specify the API Endpoint
-        hResult = curl_easy_setopt(m_hCurl, CURLOPT_URL, URL_CONNEXION_UTILISATEUR);
+        hResult = curl_easy_setopt(m_hCurl, CURLOPT_URL, URL_USER_LOGIN);
 
         //Progression désactivée
         hResult = curl_easy_setopt(m_hCurl, CURLOPT_NOPROGRESS, 1);

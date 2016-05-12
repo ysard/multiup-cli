@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with multiup_cli.  If not, see <http://www.gnu.org/licenses/>.
 #
-#    Copyright 2013 Lex
+#    Copyright 2013-2016 Lex
 #    www.multiup.org
 
 cmake_minimum_required(VERSION 3.0) # Pour éviter un warning au lancement de CMake, on doit préciser la version minimale
