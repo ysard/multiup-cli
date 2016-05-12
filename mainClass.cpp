@@ -224,7 +224,7 @@ void MainClass::connexion()
     hResult = curl_easy_setopt(m_hCurl, CURLOPT_WRITEFUNCTION, write_data);
 
     //UserAgent
-    hResult = curl_easy_setopt(m_hCurl, CURLOPT_USERAGENT, "User-Agent: Mozilla/5.0 (Windows NT 5.1; rv:10.0.2) Gecko/20100101 Firefox/10.0.2");
+    hResult = curl_easy_setopt(m_hCurl, CURLOPT_USERAGENT, "Multiup/" VERSION);
 
     //Specify the HTTP Method
     if (m_processingStep == 1) {
