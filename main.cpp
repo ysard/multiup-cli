@@ -19,6 +19,8 @@ This file is part of multiup_cli.
 */
 
 #include <iostream>
+// Note : If you can't compile this with Qt due to error in header iostream, do this:
+//sudo apt-get install gcc-4.9-multilib
 #include <fstream>
 #include <list>
 #include "mainClass.h"
