@@ -41,6 +41,9 @@ if(WIN32)
 		set(curl_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-devel-nmake/lib/)
 		set(curl_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-devel-nmake/include/)
 	endif()
+	
+	# Preprocessor directive: #define LINUX
+	add_definitions(-DWINDOWS)
 endif()
 
 if(UNIX)
@@ -58,6 +61,9 @@ if(UNIX)
 		set(curl_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-devel-unix-static/lib/)
 		set(curl_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-devel-unix-static/include/)
 	endif()
+	
+	# Preprocessor directive: #define LINUX
+	add_definitions(-DLINUX)
 endif()
 
 # Compilers FLAGS (c++ 11 & linker options)

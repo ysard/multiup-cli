@@ -139,7 +139,7 @@ void MainClass::connection()
     else if (m_processingStep == 1) { // Sélection du serveur
 
         //Specify the API Endpoint
-        hResult = curl_easy_setopt(m_hCurl, CURLOPT_URL, URL_SELECTION_SERVEUR);
+        hResult = curl_easy_setopt(m_hCurl, CURLOPT_URL, URL_SERVER_SELECTION);
 
         //Progression désactivée
         hResult = curl_easy_setopt(m_hCurl, CURLOPT_NOPROGRESS, 1);
@@ -165,7 +165,7 @@ void MainClass::connection()
         }
 
         //Specify the API Endpoint
-        hResult = curl_easy_setopt(m_hCurl, CURLOPT_URL, URL_RECUPERATION_DROITS);
+        hResult = curl_easy_setopt(m_hCurl, CURLOPT_URL, URL_GET_UP_RIGHTS);
 
         //Progression désactivée
         hResult = curl_easy_setopt(m_hCurl, CURLOPT_NOPROGRESS, 1);

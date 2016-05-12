@@ -23,15 +23,15 @@ This file is part of multiup_cli.
 
 
 //#define WINDOWS
-#define LINUX
+//#define LINUX
 
 
-#define VERSION "0.4.0"
+#define VERSION "0.4.1"
 
 // --- Configuration des urls de l'API
-#define URL_CONNEXION_UTILISATEUR "http://www.multiup.org/api/login"
-#define URL_SELECTION_SERVEUR "http://www.multiup.org/api/get-fastest-server"
-#define URL_RECUPERATION_DROITS "http://www.multiup.org/api/get-list-hosts"
+#define URL_USER_LOGIN "http://www.multiup.org/api/login"
+#define URL_SERVER_SELECTION "http://www.multiup.org/api/get-fastest-server"
+#define URL_GET_UP_RIGHTS "http://www.multiup.org/api/get-list-hosts"
 
 
 #endif // CONFIG_H
