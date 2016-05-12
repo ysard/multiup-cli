@@ -60,23 +60,23 @@ public:
 
     //consructeur par def
     MainClass(const bool viewOnly,
-              const std::list<std::string> &listeFichiers,
-              const std::list<std::string> &listeHosts);
+              const std::list<std::string> &fileList,
+              const std::list<std::string> &hostList);
     //consructeur si identifiants
     MainClass(const std::string &login,
               const std::string &password,
               const bool viewOnly,
-              const std::list<std::string> &listeFichiers,
-              const std::list<std::string> &listeHosts);
+              const std::list<std::string> &fileList,
+              const std::list<std::string> &hostList);
     virtual ~MainClass();
 
     static int progress_func(void *ptr, double TotalToDownload, double NowDownloaded, double TotalToUpload, double NowUploaded);
     static size_t write_data(void *buffer, size_t size, size_t nmemb, void *userdata);
 
-    void lancement();
-    void afficher();
-    void connexion();
-    void finProcedure(CURLcode hResult);
+    void launch();
+    void printParameters();
+    void connection();
+    void endProcess(CURLcode hResult);
 
 
 private:
@@ -88,15 +88,15 @@ private:
     std::string             m_login;
     std::string             m_loginId;
     std::string             m_password;
-    bool                    m_connecte;
+    bool                    m_connected;
     bool                    m_viewOnly;
 
     std::string             m_fastestServerUrl;
 
-    std::list<std::string>  m_hebergeursListe;
-    std::list<std::string>  m_listeFichiers;
+    std::list<std::string>  m_hostList;
+    std::list<std::string>  m_fileList;
     std::list<std::string>  m_listeHosts;
-    std::string             m_fichierEnCours;
+    std::string             m_currentUploadedFile;
 
     std::string             m_finalLink;
 

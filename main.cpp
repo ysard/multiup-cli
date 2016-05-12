@@ -135,14 +135,14 @@ int main(int argc, char *argv[])
     {
         //cout << "Demarrage en mode connecte" << endl;
         MainClass multiup(login, password, viewOnly, listeFichier, listHosts);
-        multiup.lancement();
+        multiup.launch();
         return 0;
     }
     else if ((login.size() == 0) && (password.size() == 0) && (listeFichier.size() != 0))
     {
         //cout << "Demarrage en mode anonyme" << endl;
         MainClass multiup(viewOnly, listeFichier, listHosts);
-        multiup.lancement();
+        multiup.launch();
         return 0;
     }
     else {

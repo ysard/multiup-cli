@@ -26,30 +26,29 @@ using namespace std;
 struct Bricolage    bricolo;
 
 
-MainClass::MainClass(const bool viewOnly, const list<string> &listeFichiers, const std::list<string> &listeHosts)
-{
-    m_listeFichiers     = listeFichiers;
-    m_connecte          = false;
-    m_viewOnly          = viewOnly;
-    m_listeHosts        = listeHosts;
+MainClass::MainClass(const bool viewOnly, const list<string> &fileList, const std::list<string> &hostList) :
+    m_fileList(fileList),
+    m_viewOnly(viewOnly),
+    m_listeHosts(hostList)
 
-    m_processingStep    = 1;
+{
+    m_connected      = false;
+    m_processingStep = 1;
 }
 
-MainClass::MainClass(const string &login, const string &password, const bool viewOnly, const list<string> &listeFichiers, const std::list<string> &listeHosts)
+MainClass::MainClass(const string &login, const string &password,
+                     const bool viewOnly, const list<string> &fileList, const std::list<string> &hostList) :
+    m_login(login),
+    m_password(password),
+    m_fileList(fileList),
+    m_viewOnly(viewOnly),
+    m_listeHosts(hostList)
 {
-    m_login             = login;
-    m_password          = password;
-
-    m_listeFichiers     = listeFichiers;
-    m_connecte          = true;
-    m_viewOnly          = viewOnly;
-    m_listeHosts        = listeHosts;
-
-    m_processingStep   = 0;
+    m_connected      = true;
+    m_processingStep = 0;
 
     // Etape de login (m_processingStep = 0)
-    connexion();
+    connection();
 }
 
 MainClass::~MainClass()
@@ -57,40 +56,40 @@ MainClass::~MainClass()
     // E.Valls's brain:
 }
 
-void MainClass::lancement()
+void MainClass::launch()
 {
     //afficher();
 
     // Upload des fichiers les uns après les autres
     list<string>::iterator iterator;
-    for (iterator=m_listeFichiers.begin(); iterator!=m_listeFichiers.end(); ++iterator)
+    for (iterator=m_fileList.begin(); iterator!=m_fileList.end(); ++iterator)
     {
         // Mémorise le fichier courant
-        m_fichierEnCours = *iterator;
-        cout << "Fichier en cours d'up : " << m_fichierEnCours << endl;
+        m_currentUploadedFile = *iterator;
+        cout << "Fichier en cours d'up : " << m_currentUploadedFile << endl;
 
         // Initialisation de la structure
-        m_hebergeursListe.clear();
+        m_hostList.clear();
 
         // Début du traitement du fichier
         m_processingStep = 1;
-        connexion();
+        connection();
     }
     cout << "Fin du programme" << endl;
 }
 
-void MainClass::afficher()
+void MainClass::printParameters()
 {
     cout << m_login << " " << m_password;
 
     list<string>::iterator iterator;
-    for (iterator=m_listeFichiers.begin(); iterator!=m_listeFichiers.end(); ++iterator)
+    for (iterator=m_fileList.begin(); iterator!=m_fileList.end(); ++iterator)
         cout << " " << *iterator;
 
     cout << endl;
 }
 
-void MainClass::connexion()
+void MainClass::connection()
 {
     // Vidage du buffer remplit par le callback de Curl (CURLOPT_WRITEFUNCTION)
     bricolo.dataBuffer = "";
@@ -104,12 +103,12 @@ void MainClass::connexion()
     m_last = NULL;
 
     // Initialize curl, just don't let easy_init to do it for you
-    #ifdef WINDOWS
-        curl_global_init(CURL_GLOBAL_WIN32);
-    #endif
-    #ifdef LINUX
-        curl_global_init(CURL_GLOBAL_ALL);
-    #endif
+#ifdef WINDOWS
+    curl_global_init(CURL_GLOBAL_WIN32);
+#endif
+#ifdef LINUX
+    curl_global_init(CURL_GLOBAL_ALL);
+#endif
 
     // Handle to the curl
     m_hCurl = curl_easy_init();
@@ -148,7 +147,7 @@ void MainClass::connexion()
     else if (m_processingStep == 2) { // Récupération des hébergeurs
 
         // Ajoute le nom d'utilisateur à la requête de curl (v2)
-        if (m_connecte == true) {
+        if (m_connected == true) {
             curl_formadd(&m_post,
                          &m_last,
                          CURLFORM_COPYNAME,
@@ -173,7 +172,7 @@ void MainClass::connexion()
     }
     else if (m_processingStep == 3) { // Upload
         // Ajoute le nom d'utilisateur à la requête de curl (v2)
-        if (m_connecte == true) {
+        if (m_connected == true) {
             //cout << "Curl :: Login : " << m_login << endl;
 
             curl_formadd(&m_post,
@@ -187,7 +186,7 @@ void MainClass::connexion()
 
         list<string>::iterator iterator;
         string hebergeur;
-        for (iterator=m_hebergeursListe.begin(); iterator!=m_hebergeursListe.end(); ++iterator)
+        for (iterator=m_hostList.begin(); iterator!=m_hostList.end(); ++iterator)
         {
             // Désolé mais l'itérateur n'a pas la méthode c_str().. obligé de convertir en string...
             hebergeur = *iterator;
@@ -209,7 +208,7 @@ void MainClass::connexion()
                      CURLFORM_COPYNAME,
                      "files[]",
                      CURLFORM_FILE,
-                     m_fichierEnCours.c_str(),
+                     m_currentUploadedFile.c_str(),
                      CURLFORM_END); // Apparait dans valgrind..
 
         //Specify the API Endpoint
@@ -244,7 +243,7 @@ void MainClass::connexion()
     curl_formfree(m_post);
     curl_global_cleanup();
 
-    finProcedure(hResult);
+    endProcess(hResult);
 }
 
 int MainClass::progress_func(void *ptr, double TotalToDownload, double NowDownloaded, double TotalToUpload, double NowUploaded)
@@ -434,7 +433,7 @@ MainClass::EtatConnexion MainClass::webhostsDataProcessing()
 
 
             // Récupération de la taille du fichier courant
-            std::streampos fileSize = getFileSize(m_fichierEnCours);
+            std::streampos fileSize = getFileSize(m_currentUploadedFile);
 
             for (iterator=members.begin(); iterator!=members.end(); ++iterator)
             {
@@ -452,7 +451,7 @@ MainClass::EtatConnexion MainClass::webhostsDataProcessing()
                 bool ret = webhostParsing(root["hosts"][*iterator], fileSize);
                 // Hébergeur1 autorisé
                 if (ret)
-                    m_hebergeursListe.push_back(*iterator);
+                    m_hostList.push_back(*iterator);
 
                 // Hébergeur suivant
                 ++iterator;
@@ -469,14 +468,14 @@ MainClass::EtatConnexion MainClass::webhostsDataProcessing()
                 cout << endl;
                 // Hébergeur2 autorisé
                 if (ret)
-                    m_hebergeursListe.push_back(*iterator);
+                    m_hostList.push_back(*iterator);
             }
 
             // Transtypage pour la comparaison juste après...
             std::vector<int>::size_type maxHosts = (std::vector<int>::size_type)root.get("maxHosts", 100).asInt();
-            cout << "Hebergeurs :: Nombre selectionnes : " << m_hebergeursListe.size() << '/' << maxHosts << endl;
+            cout << "Hebergeurs :: Nombre selectionnes : " << m_hostList.size() << '/' << maxHosts << endl;
 
-            if (m_hebergeursListe.size() > maxHosts)
+            if (m_hostList.size() > maxHosts)
                 cout << "Hebergeurs :: /!\\ Trop d'hebergeurs selectionnes : Resultats non garantis" << endl;
 
             return EtatConnexion::Ok;
@@ -551,15 +550,15 @@ MainClass::EtatConnexion MainClass::uploadDataProcessing()
 }
 
 
-void MainClass::finProcedure(CURLcode hResult)
+void MainClass::endProcess(CURLcode hResult)
 {
     switch(hResult)
     {
-        case CURLE_OK:                  //cout << "Curl :: Termine sans erreur" << endl;
-                                        break;
+    case CURLE_OK:                  //cout << "Curl :: Termine sans erreur" << endl;
+        break;
 
-        default:                        cout << "Curl :: Erreur " << hResult << endl;
-                                        break;
+    default:                        cout << "Curl :: Erreur " << hResult << endl;
+        break;
     }
 
     if (m_processingStep == 0) {
@@ -567,23 +566,23 @@ void MainClass::finProcedure(CURLcode hResult)
 
         switch(etatConnexion)
         {
-            case EtatConnexion::Bad:
-                        cout << "Connexion :: Mauvais login ou mauvais mot de passe => Upload Anonyme" << endl;
-                        m_connecte = false;
-                        break;
+        case EtatConnexion::Bad:
+            cout << "Connexion :: Mauvais login ou mauvais mot de passe => Upload Anonyme" << endl;
+            m_connected = false;
+            break;
 
-            case EtatConnexion::Ok:
-                        cout << "Connexion :: Upload en tant que " << m_login << endl;
-                        // Pas de destruction car le processus va tenter de lui meme une obtention des droits sur debridpowa
-                        m_connecte = true;
-                        break;
+        case EtatConnexion::Ok:
+            cout << "Connexion :: Upload en tant que " << m_login << endl;
+            // Pas de destruction car le processus va tenter de lui meme une obtention des droits sur debridpowa
+            m_connected = true;
+            break;
 
-            default:
-                        cout << "Connexion :: Verifiez votre connexion internet ou la disponibilite du site... => Upload Anonyme" << endl;
-                        m_connecte = false;
-                        // on arrete pas le programme car le login n'est pas obligatoire;
-                        //même si dans ce cas on sait très bien que la liaison avec le site a un problème...
-                        break;
+        default:
+            cout << "Connexion :: Verifiez votre connexion internet ou la disponibilite du site... => Upload Anonyme" << endl;
+            m_connected = false;
+            // on arrete pas le programme car le login n'est pas obligatoire;
+            //même si dans ce cas on sait très bien que la liaison avec le site a un problème...
+            break;
         }
         return;
     }
@@ -592,21 +591,21 @@ void MainClass::finProcedure(CURLcode hResult)
 
         switch (etatConnexion) {
 
-            case EtatConnexion::Bad:
-                        cout << "SelectionServeur :: Pas de serveur trouve" << endl;
-                        return;
-                        break;
+        case EtatConnexion::Bad:
+            cout << "SelectionServeur :: Pas de serveur trouve" << endl;
+            return;
+            break;
 
-            case EtatConnexion::Ok:
-                        //cout << "SelectionServeur :: Serveur trouve" << endl;
-                        break;
+        case EtatConnexion::Ok:
+            //cout << "SelectionServeur :: Serveur trouve" << endl;
+            break;
 
-            default:    cout << "SelectionServeur :: Erreur inconnue" << endl;
-                        return;
-                        break;
+        default:    cout << "SelectionServeur :: Erreur inconnue" << endl;
+            return;
+            break;
         }
         m_processingStep++;
-        connexion();
+        connection();
         return;
     }
     else if (m_processingStep == 2) {
@@ -614,18 +613,18 @@ void MainClass::finProcedure(CURLcode hResult)
 
         switch (etatConnexion) {
 
-            case EtatConnexion::Bad:
-                        cout << "Hebergeurs :: Pas d'hebergeurs trouves" << endl;
-                        return;
-                        break;
+        case EtatConnexion::Bad:
+            cout << "Hebergeurs :: Pas d'hebergeurs trouves" << endl;
+            return;
+            break;
 
-            case EtatConnexion::Ok:
-                        //cout << "Hebergeurs :: trouves" << endl;
-                        break;
+        case EtatConnexion::Ok:
+            //cout << "Hebergeurs :: trouves" << endl;
+            break;
 
-            default:    cout << "Hebergeurs :: Erreur inconnue" << endl;
-                        return;
-                        break;
+        default:    cout << "Hebergeurs :: Erreur inconnue" << endl;
+            return;
+            break;
         }
 
         if (m_viewOnly) {
@@ -634,7 +633,7 @@ void MainClass::finProcedure(CURLcode hResult)
         }
 
         m_processingStep++;
-        connexion();
+        connection();
         return;
     }
     else if (m_processingStep == 3) {
@@ -642,16 +641,16 @@ void MainClass::finProcedure(CURLcode hResult)
 
         switch (etatConnexion) {
 
-            case EtatConnexion::Bad:
-                        cout << endl << "Upload :: Pas d'url trouvee" << endl << endl;
-                        break;
+        case EtatConnexion::Bad:
+            cout << endl << "Upload :: Pas d'url trouvee" << endl << endl;
+            break;
 
-            case EtatConnexion::Ok:
-                        cout << endl << "Upload :: Termine" << endl << endl;
-                        break;
+        case EtatConnexion::Ok:
+            cout << endl << "Upload :: Termine" << endl << endl;
+            break;
 
-            default:    cout << endl << "Upload :: Erreur inconnue" << endl << endl;
-                        break;
+        default:    cout << endl << "Upload :: Erreur inconnue" << endl << endl;
+            break;
         }
         //cout << "Upload :: Fichier suivant..." << endl;
         return;
@@ -728,7 +727,7 @@ string convertIntToString(const int &number)
     // écrire un nombre dans le flux
     oss << number;
     // récupérer une chaîne de caractères
-     return oss.str();
+    return oss.str();
 }
 
 std::streampos getFileSize(const string& filename)
