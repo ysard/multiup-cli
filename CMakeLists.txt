@@ -27,19 +27,19 @@ if(WIN32)
 		# For g++/gcc compiler (mingw32)
 		# curl
 		set(curl_lib_name libcurl.a)
-		set(curl_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.28.1-devel-mingw32/lib/)
-		set(curl_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.28.1-devel-mingw32/include/)
+		set(curl_lib_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.28.1-devel-mingw32/lib/)
+		set(curl_include_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.28.1-devel-mingw32/include/)
 	
 	else()
 		# For Visual Studio etc compiler
 		# curl
 		#set(curl_lib_name libcurl.lib)
-		#set(curl_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.29-nmake/lib/)
-		#set(curl_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.29-nmake/include/)
+		#set(curl_lib_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.29-nmake/lib/)
+		#set(curl_include_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.29-nmake/include/)
 		
 		set(curl_lib_name libcurl_a.lib)
-		set(curl_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-devel-nmake/lib/)
-		set(curl_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-devel-nmake/include/)
+		set(curl_lib_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.44.0-devel-nmake/lib/)
+		set(curl_include_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.44.0-devel-nmake/include/)
 	endif()
 	
 	# Preprocessor directive: #define LINUX
@@ -51,15 +51,15 @@ if(UNIX)
 		# Raspberry pi
 		# curl
 		set(curl_lib_name curl)
-		set(curl_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-armv6l/lib/)
-		set(curl_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-armv6l/include/)
+		set(curl_lib_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.44.0-armv6l/lib/)
+		set(curl_include_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.44.0-armv6l/include/)
 
 	else()
 		# Autres systèmes unix
 		# curl
 		set(curl_lib_name curl)
-		set(curl_lib_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-devel-unix-static/lib/)
-		set(curl_include_dir ${CMAKE_SOURCE_DIR}/dependances-developpement/curl-7.44.0-devel-unix-static/include/)
+		set(curl_lib_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.44.0-devel-unix-static/lib/)
+		set(curl_include_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.44.0-devel-unix-static/include/)
 	endif()
 	
 	# Preprocessor directive: #define LINUX
@@ -133,9 +133,9 @@ add_executable(
 	  ../colors_in_the_shell.cpp
       ../Config.h
 	  
-	  ../dependances-developpement/jsoncpp/dist/json/json.h
-	  ../dependances-developpement/jsoncpp/dist/json/json-forwards.h
-	  ../dependances-developpement/jsoncpp/dist/jsoncpp.cpp
+	  ../third-party/jsoncpp/dist/json/json.h
+	  ../third-party/jsoncpp/dist/json/json-forwards.h
+	  ../third-party/jsoncpp/dist/jsoncpp.cpp
 )
 
 target_link_libraries(

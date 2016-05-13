@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with multiup_cli.  If not, see <http://www.gnu.org/licenses/>.
 #
-#    Copyright 2013 Lex
+#    Copyright 2013-2016 Lex
 #    www.multiup.org
 
 #-------------------------------------------------
@@ -32,8 +32,8 @@ TEMPLATE = app
 
 #CURL unix
 #unix:INCLUDEPATH += /usr/include/curl
-unix:INCLUDEPATH    += ./dependances-developpement/curl-7.44.0-devel-unix-static/include
-unix:LIBS           += -L"./dependances-developpement/curl-7.44.0-devel-unix-static/lib"
+unix:INCLUDEPATH    += ./third-party/curl-7.44.0-devel-unix-static/include
+unix:LIBS           += -L"./third-party/curl-7.44.0-devel-unix-static/lib"
 unix:LIBS           += -lcurl
 #  -lidn -lssl -lcrypto -lz
 #-lidn -lssl -lcrypto -lrt -lssl -lz -lrtmp (selon les restrictions lors de la compilation de curl..)
@@ -41,9 +41,9 @@ unix:LIBS           += -lcurl
 
 #CURL windows
 # Avec mingw32 :
-win32:INCLUDEPATH   += D:\Projets\multiup\multiup_cli\dependances-developpement\curl-7.28.1-devel-mingw32\include
-win32:INCLUDEPATH   += D:\Projets\multiup\multiup_cli\dependances-developpement\curl-7.28.1-devel-mingw32\include\curl
-win32:LIBS          += -L"D:\Projets\multiup\multiup_cli\dependances-developpement\curl-7.28.1-devel-mingw32\lib"
+win32:INCLUDEPATH   += D:\Projets\multiup\multiup_cli\third-party\curl-7.28.1-devel-mingw32\include
+win32:INCLUDEPATH   += D:\Projets\multiup\multiup_cli\third-party\curl-7.28.1-devel-mingw32\include\curl
+win32:LIBS          += -L"D:\Projets\multiup\multiup_cli\third-party\curl-7.28.1-devel-mingw32\lib"
 #revoir la lib ici..-lws2_32  ptetre aussi... -lwldap32 ??
 win32:LIBS          += -lcurl -lwldap32 -lws2_32
 
@@ -58,11 +58,11 @@ DEFINES += HTTP_ONLY
 
 SOURCES +=  main.cpp \
             mainClass.cpp \
-            dependances-developpement/jsoncpp/dist/jsoncpp.cpp \
+            third-party/jsoncpp/dist/jsoncpp.cpp \
             colors_in_the_shell.cpp
 
 HEADERS +=  mainClass.h \
             Config.h \
-            dependances-developpement/jsoncpp/dist/json/json-forwards.h \
-            dependances-developpement/jsoncpp/dist/json/json.h \
+            third-party/jsoncpp/dist/json/json-forwards.h \
+            third-party/jsoncpp/dist/json/json.h \
             colors_in_the_shell.h

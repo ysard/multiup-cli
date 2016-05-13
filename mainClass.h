@@ -29,9 +29,8 @@ This file is part of multiup_cli.
 #include <iomanip>
 #include <fstream>
 #include <list>
-#include "curl/curl.h"
+
 #include "Config.h"
-#include "colors_in_the_shell.h"
 
 // Internationalization dependencies
 #ifdef ENABLE_NLS
