@@ -21,10 +21,19 @@ This file is part of multiup_cli.
 #ifndef CONFIG_H
 #define CONFIG_H
 
-
 //#define WINDOWS
 //#define LINUX
+//#define ENABLE_NLS
+//#define LOCALES "/usr/share/locale"
 
+// Internationalization dependencies
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#include <locale.h>
+#define _(STRING) gettext(STRING)
+#else
+#define _(STRING) STRING
+#endif
 
 #define VERSION "0.4.1"
 
@@ -32,6 +41,5 @@ This file is part of multiup_cli.
 #define URL_USER_LOGIN "http://www.multiup.org/api/login"
 #define URL_SERVER_SELECTION "http://www.multiup.org/api/get-fastest-server"
 #define URL_GET_UP_RIGHTS "http://www.multiup.org/api/get-list-hosts"
-
 
 #endif // CONFIG_H

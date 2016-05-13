@@ -23,18 +23,40 @@ This file is part of multiup_cli.
 //sudo apt-get install gcc-4.9-multilib
 #include <fstream>
 #include <list>
+
+#include "Config.h"
+
+// Internationalization dependencies
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#include <locale.h>
+#define _(STRING) gettext(STRING)
+#else
+#define _(STRING) STRING
+#endif
+
 #include "mainClass.h"
 
 using namespace std;
 
-void affichage_syntaxe(string nomApp);
+void display_help(string nomApp);
 
 int main(int argc, char *argv[])
 {
     string login;
     string password;
-    list<string> listeFichier;
-    list<string> listHosts;
+    list<string> fileList;
+    list<string> hostList;
+
+    #ifdef ENABLE_NLS
+    //~ i18n: initializes the entire current locale of the program as per environment variables set by the user
+    //setlocale(LC_ALL, "en_GB");
+    //~ i18n: Indicate the path of the i18n catalog file
+    // The section "multiup_cli" of this catalog will be called
+    bindtextdomain("multiup_cli", LOCALES);
+    //~ i18n: sets the message domain
+    textdomain("multiup_cli");
+    #endif
 
 
     string argument;
@@ -42,8 +64,8 @@ int main(int argc, char *argv[])
     bool hosts = false;
     bool viewOnly = false;
 
-    cout << "Multiup MaNaGer CLI v" << VERSION << " - Copyright 2013-2015 Lex - Bienvenue !" << endl << endl;
-    cout << "\tPour des fonctionnalites plus evoluees, \n\tveuillez vous diriger vers \"Multiup MaNaGer GUI\",\n\tdisponible sur le site..." << endl << endl;
+    cout << "Multiup MaNaGer CLI v" VERSION << _(" - Copyright 2013-2015 Lex - Bienvenue !") << endl << endl;
+    cout << _("\tPour des fonctionnalites plus evoluees, \n\tveuillez vous diriger vers \"Multiup MaNaGer GUI\",\n\tdisponible sur le site...") << endl << endl;
 
     std::size_t found;
 
@@ -56,13 +78,13 @@ int main(int argc, char *argv[])
         if ((argument != "--login") && (argument != "--password") && (argument != "--help") && (argument != "--view") && (argument != "--hosts") && (read == true))
         {
             // Test du fichier
-            ifstream fichier(argument.c_str(), ios::in); //ouverture en lecture
-            if (fichier) { // ouverture réussie
-                fichier.close();
+            ifstream file(argument.c_str(), ios::in); //ouverture en lecture
+            if (file) { // ouverture réussie
+                file.close();
 
                 //cout << "Ajout de : " << argument << endl;
 
-                listeFichier.push_back(argument);
+                fileList.push_back(argument);
             }
         }
         else { // Autre paramètre détecté => on arrête d'essayer l'ajout des fichier
@@ -72,7 +94,7 @@ int main(int argc, char *argv[])
         // si --hosts a déjà été trouvé on tente d'ajouter l'argument suivant dns la liste sauf si il s'agit d'un autre paramètre
         if ((argument != "--login") && (argument != "--password") && (argument != "--help") && (argument != "--view") && (argument != "--read") && (hosts == true))
         {
-            listHosts.push_back(argument);
+            hostList.push_back(argument);
         }
         else { // Autre paramètre détecté => on arrête d'essayer l'ajout des hosts
             hosts = false;
@@ -83,7 +105,7 @@ int main(int argc, char *argv[])
         if (found != string::npos)
         {
             // Affichage de l'aide
-            affichage_syntaxe(argv[0]);
+            display_help(argv[0]);
             return 0;
         }
 
@@ -126,43 +148,43 @@ int main(int argc, char *argv[])
     }
 
     //list<string>::iterator it;
-    //for (it=listeFichier.begin(); it!=listeFichier.end(); ++it)
+    //for (it=fileList.begin(); it!=fileList.end(); ++it)
     //            cout << " " << *it;
 
     //list<string>::iterator it;
-    //    for (it=listHosts.begin(); it!=listHosts.end(); ++it)
+    //    for (it=hostList.begin(); it!=hostList.end(); ++it)
     //                cout << " " << *it;
 
-    if ((login.size() != 0) && (password.size() != 0) && (listeFichier.size() != 0))
+    if ((login.size() != 0) && (password.size() != 0) && (fileList.size() != 0))
     {
         //cout << "Demarrage en mode connecte" << endl;
-        MainClass multiup(login, password, viewOnly, listeFichier, listHosts);
+        MainClass multiup(login, password, viewOnly, fileList, hostList);
         multiup.launch();
         return 0;
     }
-    else if ((login.size() == 0) && (password.size() == 0) && (listeFichier.size() != 0))
+    else if ((login.size() == 0) && (password.size() == 0) && (fileList.size() != 0))
     {
         //cout << "Demarrage en mode anonyme" << endl;
-        MainClass multiup(viewOnly, listeFichier, listHosts);
+        MainClass multiup(viewOnly, fileList, hostList);
         multiup.launch();
         return 0;
     }
     else {
-        affichage_syntaxe(argv[0]);
+        display_help(argv[0]);
     }
 
     return 0;
 }
 
-void affichage_syntaxe(string nomApp)
+void display_help(string nomApp)
 {
-    cout << "Syntaxe:" << endl;
+    cout << _("Syntaxe:") << endl;
     cout << nomApp;
-    cout << " [options...] --read [\"fichier\" \"fichier\"...] --hosts [\"hebergeur\" \"hebergeur\"...] [2>liens.txt]" << endl;
+    cout << _(" [options...] --read [\"fichier\" \"fichier\"...] --hosts [\"hebergeur\" \"hebergeur\"...] [2>liens.txt]") << endl;
 
-    cout << endl << "Options:" << endl;
-            cout << "\t--login <nom> --password <password>" << endl;
-            cout << "\t--view\t\tSimulation d'upload (verification des parametres)." << endl;
-            cout << "\t--hosts\t\tSpecifier une liste personnelle d'hebergeurs." << endl;
-            cout << "\t[2>liens.txt]\tRedirige stderr pour avoir les liens uniquement." << endl << endl;
+    cout << endl << _("Options:") << endl;
+            cout << _("\t--login <nom> --password <password>") << endl;
+            cout << _("\t--view\t\tSimulation d'upload (verification des parametres).") << endl;
+            cout << _("\t--hosts\t\tSpecifier une liste personnelle d'hebergeurs.") << endl;
+            cout << _("\t[2>liens.txt]\tRedirige stderr pour avoir les liens uniquement.") << endl << endl;
 }

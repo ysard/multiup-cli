@@ -66,7 +66,7 @@ void MainClass::launch()
     {
         // Mémorise le fichier courant
         m_currentUploadedFile = *iterator;
-        cout << "Fichier en cours d'up : " << m_currentUploadedFile << endl;
+        cout << _("Fichier en cours d'up : ") << m_currentUploadedFile << endl;
 
         // Initialisation de la structure
         m_hostList.clear();
@@ -75,7 +75,7 @@ void MainClass::launch()
         m_processingStep = 1;
         connection();
     }
-    cout << "Fin du programme" << endl;
+    cout << _("Fin du programme") << endl;
 }
 
 void MainClass::printParameters()
@@ -312,9 +312,10 @@ MainClass::EtatConnexion MainClass::connectionDataProcessing()
     }
     else {
         // report to the user the failure and their locations in the document.
-        cout  << "Failed to parse configuration\n"
-              << reader.getFormattedErrorMessages() + '\n'
+        cout  << _("Failed to parse configuration\n");
+        /*      << reader.getFormattedErrorMessages() + '\n'
               << root;
+        */
         return EtatConnexion::Error;
     }
 }
@@ -348,9 +349,10 @@ MainClass::EtatConnexion MainClass::fastestServerDataProcessing()
     }
     else {
         // report to the user the failure and their locations in the document.
-        cout  << "Failed to parse configuration\n"
-              << reader.getFormattedErrorMessages() + '\n'
+        cout  << _("Failed to parse configuration\n");
+        /*      << reader.getFormattedErrorMessages() + '\n'
               << root;
+        */
         return EtatConnexion::Error;
     }
 }
@@ -397,18 +399,18 @@ MainClass::EtatConnexion MainClass::webhostsDataProcessing()
             }
             */
 #ifdef WINDOWS
-            cout << "Selectionne : [";
+            cout << _("Selectionne : [");
             putInGreen("true");
-            cout << "]; Deselectionne : [";
+            cout << _("]; Deselectionne : [");
             putInRed("false");
-            cout  << "]; Taille excessive : [";
+            cout  << _("]; Taille excessive : [");
             putBgInRed("false");
             cout << "];"
                  << endl;
 #else
-            cout << "Selectionne : [" << putInGreen("true") << "]; "
-                 << "Deselectionne : [" << putInRed("false") << "]; "
-                 << "Taille excessive : [" << putBgInRed("false") << "];"
+            cout << _("Selectionne : [") << putInGreen("true") << "]; "
+                 << _("Deselectionne : [") << putInRed("false") << "]; "
+                 << _("Taille excessive : [") << putBgInRed("false") << "];"
                  << endl;
 #endif
 
@@ -473,10 +475,10 @@ MainClass::EtatConnexion MainClass::webhostsDataProcessing()
 
             // Transtypage pour la comparaison juste après...
             std::vector<int>::size_type maxHosts = (std::vector<int>::size_type)root.get("maxHosts", 100).asInt();
-            cout << "Hebergeurs :: Nombre selectionnes : " << m_hostList.size() << '/' << maxHosts << endl;
+            cout << _("Hebergeurs :: Nombre selectionnes : ") << m_hostList.size() << '/' << maxHosts << endl;
 
             if (m_hostList.size() > maxHosts)
-                cout << "Hebergeurs :: /!\\ Trop d'hebergeurs selectionnes : Resultats non garantis" << endl;
+                cout << _("Hebergeurs :: /!\\ Trop d'hebergeurs selectionnes : Resultats non garantis") << endl;
 
             return EtatConnexion::Ok;
         }
@@ -487,9 +489,10 @@ MainClass::EtatConnexion MainClass::webhostsDataProcessing()
     }
     else {
         // report to the user the failure and their locations in the document.
-        cout  << "Failed to parse configuration\n"
-              << reader.getFormattedErrorMessages() + '\n'
+        cout  << _("Failed to parse configuration\n");
+        /*      << reader.getFormattedErrorMessages() + '\n'
               << root;
+        */
         return EtatConnexion::Error;
     }
 }
@@ -532,7 +535,7 @@ MainClass::EtatConnexion MainClass::uploadDataProcessing()
         m_finalLink = root.get("url", "").asString();
 
         // Affichage sur std et stderr
-        cout << endl << "Upload :: Lien : ";
+        cout << endl << _("Upload :: Lien : ");
         cerr << m_finalLink << endl;
 
         return EtatConnexion::Ok;
@@ -542,10 +545,11 @@ MainClass::EtatConnexion MainClass::uploadDataProcessing()
         return EtatConnexion::Bad;
         // PS: pas d'objet "error" ici..
         // report to the user the failure and their locations in the document.
-        cout << "Failed to parse configuration\n"
-             << reader.getFormattedErrorMessages() + '\n'
+        cout << _("Failed to parse configuration\n");
+        /*     << reader.getFormattedErrorMessages() + '\n'
              << root
              << endl;
+        */
     }
 }
 
@@ -554,10 +558,10 @@ void MainClass::endProcess(CURLcode hResult)
 {
     switch(hResult)
     {
-    case CURLE_OK:                  //cout << "Curl :: Termine sans erreur" << endl;
+    case CURLE_OK:                  //cout << _("Curl :: Termine sans erreur") << endl;
         break;
 
-    default:                        cout << "Curl :: Erreur " << hResult << endl;
+    default:                        cout << _("Curl :: Erreur ") << hResult << endl;
         break;
     }
 
@@ -567,18 +571,18 @@ void MainClass::endProcess(CURLcode hResult)
         switch(etatConnexion)
         {
         case EtatConnexion::Bad:
-            cout << "Connexion :: Mauvais login ou mauvais mot de passe => Upload Anonyme" << endl;
+            cout << _("Connexion :: Mauvais login ou mauvais mot de passe => Upload Anonyme") << endl;
             m_connected = false;
             break;
 
         case EtatConnexion::Ok:
-            cout << "Connexion :: Upload en tant que " << m_login << endl;
+            cout << _("Connexion :: Upload en tant que ") << m_login << endl;
             // Pas de destruction car le processus va tenter de lui meme une obtention des droits sur debridpowa
             m_connected = true;
             break;
 
         default:
-            cout << "Connexion :: Verifiez votre connexion internet ou la disponibilite du site... => Upload Anonyme" << endl;
+            cout << _("Connexion :: Verifiez votre connexion internet ou la disponibilite du site... => Upload Anonyme") << endl;
             m_connected = false;
             // on arrete pas le programme car le login n'est pas obligatoire;
             //même si dans ce cas on sait très bien que la liaison avec le site a un problème...
@@ -592,17 +596,16 @@ void MainClass::endProcess(CURLcode hResult)
         switch (etatConnexion) {
 
         case EtatConnexion::Bad:
-            cout << "SelectionServeur :: Pas de serveur trouve" << endl;
+            cout << _("SelectionServeur :: Pas de serveur trouve") << endl;
             return;
-            break;
 
         case EtatConnexion::Ok:
-            //cout << "SelectionServeur :: Serveur trouve" << endl;
+            //cout << _("SelectionServeur :: Serveur trouve") << endl;
             break;
 
-        default:    cout << "SelectionServeur :: Erreur inconnue" << endl;
+        default:
+            cout << _("SelectionServeur :: Erreur inconnue") << endl;
             return;
-            break;
         }
         m_processingStep++;
         connection();
@@ -614,21 +617,20 @@ void MainClass::endProcess(CURLcode hResult)
         switch (etatConnexion) {
 
         case EtatConnexion::Bad:
-            cout << "Hebergeurs :: Pas d'hebergeurs trouves" << endl;
+            cout << _("Hebergeurs :: Pas d'hebergeurs trouves") << endl;
             return;
-            break;
 
         case EtatConnexion::Ok:
-            //cout << "Hebergeurs :: trouves" << endl;
+            //cout << _("Hebergeurs :: trouves") << endl;
             break;
 
-        default:    cout << "Hebergeurs :: Erreur inconnue" << endl;
+        default:
+            cout << _("Hebergeurs :: Erreur inconnue") << endl;
             return;
-            break;
         }
 
         if (m_viewOnly) {
-            cout << "Fin de simulation pour ce fichier" << endl << endl;
+            cout << _("Fin de simulation pour ce fichier") << endl << endl;
             return;
         }
 
@@ -642,17 +644,18 @@ void MainClass::endProcess(CURLcode hResult)
         switch (etatConnexion) {
 
         case EtatConnexion::Bad:
-            cout << endl << "Upload :: Pas d'url trouvee" << endl << endl;
+            cout << endl << _("Upload :: Pas d'url trouvee") << endl << endl;
             break;
 
         case EtatConnexion::Ok:
-            cout << endl << "Upload :: Termine" << endl << endl;
+            cout << endl << _("Upload :: Termine") << endl << endl;
             break;
 
-        default:    cout << endl << "Upload :: Erreur inconnue" << endl << endl;
+        default:
+            cout << endl << _("Upload :: Erreur inconnue") << endl << endl;
             break;
         }
-        //cout << "Upload :: Fichier suivant..." << endl;
+        //cout << _("Upload :: Fichier suivant...") << endl;
         return;
     }
 }
@@ -675,7 +678,7 @@ bool webhostParsing(const Json::Value webhost, const std::streampos file_size)
 
     // On affiche la taille en premier
     cout << setw(4) << left << convertIntToString(max_upload_size)
-         << setw(5) << left << " Mo";
+         << setw(5) << left << " Mio";
 
     if (selection_state == "false") {
         // Hébergeur désélectionné => False => lettres rouges

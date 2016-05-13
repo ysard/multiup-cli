@@ -64,6 +64,10 @@ if(UNIX)
 	
 	# Preprocessor directive: #define LINUX
 	add_definitions(-DLINUX)
+	# Enable internationalization with gettext
+	add_definitions(-DENABLE_NLS)
+	# Locales directory
+	add_definitions(-DLOCALES="/usr/share/locale")
 endif()
 
 # Compilers FLAGS (c++ 11 & linker options)

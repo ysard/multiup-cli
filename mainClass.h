@@ -33,8 +33,19 @@ This file is part of multiup_cli.
 #include "Config.h"
 #include "colors_in_the_shell.h"
 
-#include "dependances-developpement/jsoncpp/dist/json/json-forwards.h"
-#include "dependances-developpement/jsoncpp/dist/json/json.h"
+// Internationalization dependencies
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#include <locale.h>
+#define _(STRING) gettext(STRING)
+#else
+#define _(STRING) STRING
+#endif
+
+#include "colors_in_the_shell.h"
+#include "curl/curl.h"
+#include "third-party/jsoncpp/dist/json/json-forwards.h"
+#include "third-party/jsoncpp/dist/json/json.h"
 
 // Fix Unused variable warning, usage: UNUSED(x);
 #define UNUSED(x) (void)(x)
