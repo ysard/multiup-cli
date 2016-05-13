@@ -1,0 +1,13 @@
+Package: multiup-cli
+Version: 0.4.1
+Section: base
+Installed-Size: 50
+Priority: optional
+Architecture: amd64
+Recommends:
+Suggests: 
+Depends:
+Build-Depends:
+Maintainer: Lex
+Homepage:
+Description: Command line tool for multiup.org
