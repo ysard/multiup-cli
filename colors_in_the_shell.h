@@ -8,6 +8,8 @@
 
 #ifdef WINDOWS
     // WinApi header
+	//#include <winsock2.h>
+	#define _WINSOCKAPI_    // stops windows.h including winsock.h
     #include <windows.h>
 #endif
 
