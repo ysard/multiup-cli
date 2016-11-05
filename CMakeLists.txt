@@ -131,21 +131,27 @@ add_executable(
 
 # Force static lib: find_library(CURL_LIB NAMES libcurl.a ...
 # NO_DEFAULT_PATH avoids stop search when the system lib version is found
-find_library(CURL_LIB ${curl_lib_name} ${curl_lib_dir} NO_DEFAULT_PATH)
+find_library(CURL_LIB ${curl_lib_name})
 if(CURL_LIB)
     MESSAGE(STATUS "Curl library found at: ${CURL_LIB}")
 else()
-    MESSAGE(STATUS "Curl library not found at: ${CURL_LIB} => will be built")
-    add_subdirectory(third-party)
-    add_dependencies(multiup-cli libcurl)
+    # Try to use the pre-compiled library
+    find_library(CURL_LIB ${curl_lib_name} ${curl_lib_dir} NO_DEFAULT_PATH)
+    if(CURL_LIB)
+        MESSAGE(STATUS "Curl library found at: ${CURL_LIB}")
+    else()
+        MESSAGE(STATUS "Curl library not found at: ${CURL_LIB} => will be built")
+        add_subdirectory(third-party)
+        add_dependencies(multiup-cli libcurl)
+    endif()
 endif()
 
 if(UNIX)
 	target_link_libraries(
 		  multiup-cli
-		  ${curl_lib_dir}/libcurl.a
+		  #${curl_lib_dir}/libcurl.a
 		  # If you want to use the system lib, replace with:
-		  # ${CURL_LIB}
+		  ${CURL_LIB}
 	)
 elseif(WIN32)
 	target_link_libraries(
