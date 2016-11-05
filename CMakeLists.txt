@@ -146,18 +146,17 @@ else()
     endif()
 endif()
 
-if(UNIX)
-	target_link_libraries(
-		  multiup-cli
-		  #${curl_lib_dir}/libcurl.a
-		  # If you want to use the system lib, replace with:
-		  ${CURL_LIB}
-	)
-elseif(WIN32)
-	target_link_libraries(
-		  multiup-cli
-		  ${CURL_LIB}
-	)
+if(CURL_LIB)
+    target_link_libraries(
+          multiup-cli
+          # We want to use the system lib
+          ${CURL_LIB}
+    )
+else()
+    target_link_libraries(
+        multiup-cli
+        ${curl_lib_dir}/libcurl.a
+    )
 endif()
 
 # Build in Release-mode by default if not explicitly set
