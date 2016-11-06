@@ -1,18 +1,18 @@
 
-    Multiup MaNaGer CLI v0.4.1 - Copyright 2013-2015 Lex - Bienvenue !
+        Multiup MaNaGer CLI v0.4.1 - Copyright 2013-2015 Lex - Welcome !
 
-            Pour des fonctionnalites plus evoluees,
-            veuillez vous diriger vers "Multiup MaNaGer GUI",
-            disponible sur le site...
+            For more advanced features,
+            please go to "Multiup MaNaGer GUI",
+            which is available on the website...
 
-    Syntaxe:
-    multiup-cli [options...] --read ["fichier" "fichier"...] --hosts ["hebergeur" "hebergeur"...] [2>liens.txt]
+    Syntax:
+    ./multiup-cli [options...] --read ["file" "file"...] --hosts ["host" "host"...] [2>links.txt]
 
     Options:
             --login <nom> --password <password>
-            --view          Simulation d'upload (verification des parametres).
-            --hosts         Specifier une liste personnelle d'hebergeurs.
-            [2>liens.txt]   Redirige stderr pour avoir les liens uniquement.
+            --view          Simulation of the upload (verification of the parameters).
+            --hosts         Specify a personal list of hosts.
+            [2>liens.txt]   Redirect links from stderr to a specific file.
 
 
 multiup-cli is a command line tool for sending files on www.multiup.org.
