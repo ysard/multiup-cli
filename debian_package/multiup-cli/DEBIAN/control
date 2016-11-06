@@ -5,8 +5,8 @@ Installed-Size: 50
 Priority: optional
 Architecture: amd64
 Recommends:
-Suggests: 
-Depends:
+Suggests:
+Depends: libcurl4-gnutls-dev (>= 7.38.0)
 Build-Depends:
 Maintainer: Lex
 Homepage:
