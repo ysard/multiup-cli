@@ -21,6 +21,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 # Set projectname (must be done AFTER setting configurationtypes)
+set(VERSION "0.4.1")
 project(multiup-cli)
 
 # add dependencies
@@ -111,6 +112,7 @@ MESSAGE(STATUS "Cmake prefix: ${CMAKE_SOURCE_DIR}")
 # Preprocessor definitions for this target.
 # IMPORTANT ! STATIC linking instead of SHARED
 add_definitions(-DCURL_STATICLIB)
+add_definitions(-DVERSION=${VERSION})
 
 # Executable definition
 add_executable(
@@ -167,7 +169,7 @@ endif()
 # Installation
 if(UNIX)
     INSTALL(TARGETS multiup-cli
-            DESTINATION ${INSTALL_DIR}/bin)
+            DESTINATION /usr/bin)
 endif()
 
 #if(WIN32)
