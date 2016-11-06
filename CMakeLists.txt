@@ -112,7 +112,7 @@ MESSAGE(STATUS "Cmake prefix: ${CMAKE_SOURCE_DIR}")
 # Preprocessor definitions for this target.
 # IMPORTANT ! STATIC linking instead of SHARED
 add_definitions(-DCURL_STATICLIB)
-add_definitions(-DVERSION=${VERSION})
+add_definitions(-DVERSION="${VERSION}")
 
 # Executable definition
 add_executable(
@@ -168,8 +168,13 @@ endif()
 
 # Installation
 if(UNIX)
+    # ${CMAKE_INSTALL_PREFIX} : /usr/local/
     INSTALL(TARGETS multiup-cli
-            DESTINATION /usr/bin)
+            DESTINATION "/usr/bin")
+
+    # Debian package
+    add_subdirectory(debian_package)
+
 endif()
 
 #if(WIN32)
