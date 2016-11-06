@@ -25,7 +25,9 @@ www.multiup.org
 //#define LINUX
 //#define ENABLE_NLS
 //#define LOCALES "/usr/share/locale"
-//#define VERSION "0.4.1"
+#ifndef VERSION
+    #define VERSION "0.4.1"
+#endif
 
 // --- Configuration des urls de l'API
 #define URL_USER_LOGIN "http://www.multiup.org/api/login"
