@@ -1,5 +1,4 @@
 
-
     Multiup MaNaGer CLI v0.4.1 - Copyright 2013-2015 Lex - Bienvenue !
 
             Pour des fonctionnalites plus evoluees,
@@ -15,6 +14,9 @@
             --hosts         Specifier une liste personnelle d'hebergeurs.
             [2>liens.txt]   Redirige stderr pour avoir les liens uniquement.
 
+
+multiup-cli is a command line tool for sending files on www.multiup.org.
+
 Features:
 
 * Upload simulation
@@ -29,7 +31,7 @@ In the examples, two files were tested: one of 190Mo, the other 2,8Go.
 --view option is used to simulate the upload (just a description of the
 behavior of the software when the files should be really uploaded).
 
-<img alt="Website screenshot" src="./doc/pub_example.png" width="600" />
+<img alt="Website screenshot" src="./doc/pub_example.png" width="800" />
 
 Command of examples 1 et 2:
 
@@ -80,6 +82,7 @@ Next, compile in **Release** mode.
 
 If you want to compile in **Debug** mode, open the project's settings and then
 search in **linker** section:
+
 `Entrée / "bibliothèques par défaut spécifiques ignorées"` : `msvcrt.lib`
 `LINK : warning LNK4098: conflit entre la bibliothèque par défaut 'MSVCRT' et les autres bibliothèques ; utilisez /NODEFAULTLIB:library`
 
