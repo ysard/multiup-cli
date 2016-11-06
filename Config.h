@@ -1,21 +1,21 @@
 /*
 This file is part of multiup_cli.
 
-    multiup_cli is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+multiup_cli is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    multiup_cli is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+multiup_cli is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with multiup_cli.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License
+along with multiup_cli.  If not, see <http://www.gnu.org/licenses/>.
 
-    Copyright 2013-2016 Lex
-    www.multiup.org
+Copyright 2013-2016 Lex
+www.multiup.org
 */
 
 #ifndef CONFIG_H
@@ -25,17 +25,7 @@ This file is part of multiup_cli.
 //#define LINUX
 //#define ENABLE_NLS
 //#define LOCALES "/usr/share/locale"
-
-// Internationalization dependencies
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#include <locale.h>
-#define _(STRING) gettext(STRING)
-#else
-#define _(STRING) STRING
-#endif
-
-#define VERSION "0.4.1"
+//#define VERSION "0.4.1"
 
 // --- Configuration des urls de l'API
 #define URL_USER_LOGIN "http://www.multiup.org/api/login"
