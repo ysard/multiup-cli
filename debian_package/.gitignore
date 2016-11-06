@@ -1,3 +1,4 @@
 *.deb
 !.gitignore
 md5sums
+multiup-cli/usr/bin/*
