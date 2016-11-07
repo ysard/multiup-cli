@@ -53,11 +53,14 @@ again, in example 4, the file is too big for 3 of them.
 
 By removing --view option, the files will be really sent.
 
-To retrieve only the links for each file, append the following instruction to your previous command:
+To retrieve only the links for each file, you will have to append
+the following instruction to your previous command:
 
-    command 2> links.txt
+    multiup-cli [...] 2> links.txt
 
-Note: This feature will be improved in the near future.
+or you can use a specific parameter:
+
+    multiup-cli [...] --output mylinks.txt
 
 
 # Compilation
