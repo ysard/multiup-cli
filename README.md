@@ -65,6 +65,8 @@ or you can use a specific parameter:
 
 # Compilation
 
+On all platforms CMake have to be installed.
+
 ## Windows : Microsoft visual studio
 
 Via the command line:
