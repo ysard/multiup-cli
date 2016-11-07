@@ -12,6 +12,7 @@
             --login <nom> --password <password>
             --view          Simulation of the upload (verification of the parameters).
             --hosts         Specify a personal list of hosts.
+            --output        Write links in a specified text file.
             [2>liens.txt]   Redirect links from stderr to a specific file.
 
 
