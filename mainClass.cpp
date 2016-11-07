@@ -13,7 +13,7 @@ This file is part of multiup_cli.
 
     You should have received a copy of the GNU General Public License
     along with multiup_cli.  If not, see <http://www.gnu.org/licenses/>.
-    
+
     Copyright 2013-2016 Lex
     www.multiup.org
 */
@@ -215,8 +215,31 @@ void MainClass::connection()
         hResult = curl_easy_setopt(m_hCurl, CURLOPT_URL, m_fastestServerUrl.c_str());
 
         //Progression activée et fonction
+        struct myprogress prog;
+        prog.lastruntime = 0;
+        prog.curl = m_hCurl;
         hResult = curl_easy_setopt(m_hCurl, CURLOPT_NOPROGRESS, 0);
         hResult = curl_easy_setopt(m_hCurl, CURLOPT_PROGRESSFUNCTION, &progress_func);
+        /* pass the struct pointer into the progress function */
+        hResult = curl_easy_setopt(m_hCurl, CURLOPT_PROGRESSDATA, &prog);
+
+        #if LIBCURL_VERSION_NUM >= 0x072000
+            /* xferinfo was introduced in 7.32.0, no earlier libcurl versions will
+            * compile as they won't have the symbols around.
+            *
+            * If built with a newer libcurl, but running with an older libcurl:
+            * curl_easy_setopt() will fail in run-time trying to set the new
+            * callback, making the older callback get used.
+            *
+            * New libcurls will prefer the new callback and instead use that one even
+            * if both callbacks are set. */
+
+            curl_easy_setopt(m_hCurl, CURLOPT_XFERINFOFUNCTION, xferinfo);
+            /* pass the struct pointer into the xferinfo function, note that this is
+             * an alias to CURLOPT_PROGRESSDATA */
+            curl_easy_setopt(m_hCurl, CURLOPT_XFERINFODATA, &prog);
+        #endif
+        cout << "Progression :" << endl;
     }
 
     //Récupération de la réponse du serveur
@@ -246,15 +269,53 @@ void MainClass::connection()
     endProcess(hResult);
 }
 
-int MainClass::progress_func(void *ptr, double TotalToDownload, double NowDownloaded, double TotalToUpload, double NowUploaded)
+int MainClass::progress_func(void *ptr,
+                             double dltotal, double dlnow,
+                             double ultotal, double ulnow)
 {
-    UNUSED(ptr);
-    UNUSED(TotalToDownload);
-    UNUSED(NowDownloaded);
+    return xferinfo(ptr,
+                    (curl_off_t)dltotal,
+                    (curl_off_t)dlnow,
+                    (curl_off_t)ultotal,
+                    (curl_off_t)ulnow);
+}
 
-    // Retour chariot sans saut de ligne
-    cout << '\r' << (NowUploaded/(1024*1024)) << "/" << (TotalToUpload/(1024*1024)) << " Mio | ";
-    cout << (NowUploaded / TotalToUpload)*100 << " %    ";
+int MainClass::xferinfo(void *ptr,
+                        curl_off_t dltotal, curl_off_t dlnow,
+                        curl_off_t ultotal, curl_off_t ulnow)
+{
+    /*
+     * https://curl.haxx.se/libcurl/c/CURLOPT_XFERINFOFUNCTION.html
+     * This function gets called by libcurl instead of its internal
+     * equivalent with a frequent interval. While data is being transferred
+     * it will be called very frequently, and during slow periods like when
+     * nothing is being transferred it can slow down to about one call per second.
+     *
+     * Run display each n seconds:
+     * https://curl.haxx.se/libcurl/c/progressfunc.html
+     */
+
+//      struct myprogress *myp = (struct myprogress *)ptr;
+//      CURL *curl = myp->curl;
+//      double curtime = 0;
+//
+//      curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &curtime);
+//
+//     /* under certain circumstances it may be desirable for certain functionality
+//      *    to only run every N seconds, in order to do this the transaction time can
+//      *    be used */
+//     if((curtime - myp->lastruntime) >= MINIMAL_PROGRESS_FUNCTIONALITY_INTERVAL) {
+//         // Update lastime
+//         myp->lastruntime = curtime;
+// //          fprintf(stderr, "TOTAL TIME: %f \r\n", curtime);
+//     }
+        // Avoid divide by zero
+        if (ultotal == 0)
+            return 0;
+
+        // Retour chariot sans saut de ligne
+        cout << "\r" << (ulnow / (1024 * 1024)) << "/" << (ultotal / (1024 * 1024)) << " Mio | "
+        << (int)((ulnow / (double)ultotal) * 100) << " %";
 
     return 0;
 }

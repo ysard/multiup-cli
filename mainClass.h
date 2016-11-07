@@ -13,7 +13,7 @@ This file is part of multiup_cli.
 
     You should have received a copy of the GNU General Public License
     along with multiup_cli.  If not, see <http://www.gnu.org/licenses/>.
-    
+
     Copyright 2013-2016 Lex
     www.multiup.org
 */
@@ -48,11 +48,18 @@ This file is part of multiup_cli.
 
 // Fix Unused variable warning, usage: UNUSED(x);
 #define UNUSED(x) (void)(x)
+#define MINIMAL_PROGRESS_FUNCTIONALITY_INTERVAL     1
 
 struct Bricolage
 {
     std::string dataBuffer;
 };
+
+struct myprogress {
+    double lastruntime;
+    CURL *curl;
+};
+
 
 
 std::streampos getFileSize(const std::string& filename);
@@ -80,7 +87,12 @@ public:
               const std::list<std::string> &hostList);
     virtual ~MainClass();
 
-    static int progress_func(void *ptr, double TotalToDownload, double NowDownloaded, double TotalToUpload, double NowUploaded);
+    static int progress_func(void *ptr,
+                             double dltotal, double dlnow,
+                             double ultotal, double ulnow);
+    static int xferinfo(void *ptr,
+                        curl_off_t dltotal, curl_off_t dlnow,
+                        curl_off_t ultotal, curl_off_t ulnow);
     static size_t write_data(void *buffer, size_t size, size_t nmemb, void *userdata);
 
     void launch();
