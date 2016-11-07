@@ -13,7 +13,7 @@ This file is part of multiup_cli.
 
     You should have received a copy of the GNU General Public License
     along with multiup_cli.  If not, see <http://www.gnu.org/licenses/>.
-    
+
     Copyright 2013-2016 Lex
     www.multiup.org
 */
@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
 {
     string login;
     string password;
+    string outputLinks;
     list<string> fileList;
     list<string> hostList;
 
@@ -63,6 +64,7 @@ int main(int argc, char *argv[])
     bool read(false);
     bool hosts = false;
     bool viewOnly = false;
+    bool output = false;
 
     cout << "Multiup MaNaGer CLI v" VERSION << _(" - Copyright 2013-2015 Lex - Bienvenue !") << endl << endl;
     cout << _("\tPour des fonctionnalites plus evoluees, \n\tveuillez vous diriger vers \"Multiup MaNaGer GUI\",\n\tdisponible sur le site...") << endl << endl;
@@ -75,7 +77,7 @@ int main(int argc, char *argv[])
         argument = argv[i];
 
         // si --read a déjà été trouvé on tente d'ajouter l'argument suivant dans la liste sauf si il s'agit d'un autre paramètre
-        if ((argument != "--login") && (argument != "--password") && (argument != "--help") && (argument != "--view") && (argument != "--hosts") && (read == true))
+        if ((argument != "--login") && (argument != "--password") && (argument != "--help") && (argument != "--view") && (argument != "--output") && (argument != "--hosts") && (read == true))
         {
             // Test du fichier
             ifstream file(argument.c_str(), ios::in); //ouverture en lecture
@@ -92,7 +94,7 @@ int main(int argc, char *argv[])
         }
 
         // si --hosts a déjà été trouvé on tente d'ajouter l'argument suivant dns la liste sauf si il s'agit d'un autre paramètre
-        if ((argument != "--login") && (argument != "--password") && (argument != "--help") && (argument != "--view") && (argument != "--read") && (hosts == true))
+        if ((argument != "--login") && (argument != "--password") && (argument != "--help") && (argument != "--view") && (argument != "--output") && (argument != "--read") && (hosts == true))
         {
             hostList.push_back(argument);
         }
@@ -123,6 +125,14 @@ int main(int argc, char *argv[])
         {
             //cout << "Password : " << argv[i+1] << endl;
             password = argv[i+1];
+        }
+
+        // Recherche du fichier de liens
+        found = argument.find("--output");
+        if (found != string::npos)
+        {
+            //cout << "Output : " << argv[i+1] << endl;
+            outputLinks = argv[i+1];
         }
 
         //Recherche des chemins des fichiers
@@ -158,14 +168,14 @@ int main(int argc, char *argv[])
     if ((login.size() != 0) && (password.size() != 0) && (fileList.size() != 0))
     {
         //cout << "Demarrage en mode connecte" << endl;
-        MainClass multiup(login, password, viewOnly, fileList, hostList);
+        MainClass multiup(login, password, outputLinks, viewOnly, fileList, hostList);
         multiup.launch();
         return 0;
     }
     else if ((login.size() == 0) && (password.size() == 0) && (fileList.size() != 0))
     {
         //cout << "Demarrage en mode anonyme" << endl;
-        MainClass multiup(viewOnly, fileList, hostList);
+        MainClass multiup(outputLinks, viewOnly, fileList, hostList);
         multiup.launch();
         return 0;
     }
@@ -186,5 +196,6 @@ void display_help(string nomApp)
             cout << _("\t--login <nom> --password <password>") << endl;
             cout << _("\t--view\t\tSimulation d'upload (verification des parametres).") << endl;
             cout << _("\t--hosts\t\tSpecifier une liste personnelle d'hebergeurs.") << endl;
+            cout << _("\t--output\tEnregistre les liens dans le fichier choisi.") << endl;
             cout << _("\t[2>liens.txt]\tRedirige stderr pour avoir les liens uniquement.") << endl << endl;
 }

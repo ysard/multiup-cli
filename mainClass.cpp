@@ -26,7 +26,9 @@ using namespace std;
 struct Bricolage    bricolo;
 
 
-MainClass::MainClass(const bool viewOnly, const list<string> &fileList, const std::list<string> &hostList) :
+MainClass::MainClass(const string &outputLinks,
+                     const bool viewOnly, const list<string> &fileList, const std::list<string> &hostList) :
+    m_outputLinks(outputLinks),
     m_fileList(fileList),
     m_viewOnly(viewOnly),
     m_listeHosts(hostList)
@@ -36,10 +38,11 @@ MainClass::MainClass(const bool viewOnly, const list<string> &fileList, const st
     m_processingStep = 1;
 }
 
-MainClass::MainClass(const string &login, const string &password,
+MainClass::MainClass(const string &login, const string &password, const string &outputLinks,
                      const bool viewOnly, const list<string> &fileList, const std::list<string> &hostList) :
     m_login(login),
     m_password(password),
+    m_outputLinks(outputLinks),
     m_fileList(fileList),
     m_viewOnly(viewOnly),
     m_listeHosts(hostList)
@@ -54,6 +57,14 @@ MainClass::MainClass(const string &login, const string &password,
 MainClass::~MainClass()
 {
     // E.Valls's brain:
+}
+
+void MainClass::write_link()
+{
+    ofstream outfile;
+
+    outfile.open(m_outputLinks, ios_base::app);
+    outfile << m_finalLink << endl;
 }
 
 void MainClass::launch()
@@ -598,6 +609,9 @@ MainClass::EtatConnexion MainClass::uploadDataProcessing()
         // Affichage sur std et stderr
         cout << endl << _("Upload :: Lien : ");
         cerr << m_finalLink << endl;
+
+        if (!m_outputLinks.empty())
+            write_link();
 
         return EtatConnexion::Ok;
     }

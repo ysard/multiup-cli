@@ -21,7 +21,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 # Set projectname (must be done AFTER setting configurationtypes)
-set(VERSION "0.4.1")
+set(VERSION "0.5.0")
 project(multiup-cli)
 
 # add dependencies

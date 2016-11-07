@@ -76,12 +76,14 @@ public:
     };
 
     //consructeur par def
-    MainClass(const bool viewOnly,
+    MainClass(const std::string &outputLinks,
+              const bool viewOnly,
               const std::list<std::string> &fileList,
               const std::list<std::string> &hostList);
     //consructeur si identifiants
     MainClass(const std::string &login,
               const std::string &password,
+              const std::string &outputLinks,
               const bool viewOnly,
               const std::list<std::string> &fileList,
               const std::list<std::string> &hostList);
@@ -99,6 +101,7 @@ public:
     void printParameters();
     void connection();
     void endProcess(CURLcode hResult);
+    void write_link();
 
 
 private:
@@ -110,6 +113,7 @@ private:
     std::string             m_login;
     std::string             m_loginId;
     std::string             m_password;
+    std::string             m_outputLinks;
     bool                    m_connected;
     bool                    m_viewOnly;
 
