@@ -197,5 +197,6 @@ void display_help(string nomApp)
             cout << _("\t--view\t\tSimulation d'upload (verification des parametres).") << endl;
             cout << _("\t--hosts\t\tSpecifier une liste personnelle d'hebergeurs.") << endl;
             cout << _("\t--output\tEnregistre les liens dans le fichier choisi.") << endl;
+            cout << _("\t--read\t\tEnvoyer un ou plusieurs fichiers.") << endl;
             cout << _("\t[2>liens.txt]\tRedirige stderr pour avoir les liens uniquement.") << endl << endl;
 }
