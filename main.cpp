@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     bool viewOnly = false;
     bool output = false;
 
-    cout << "Multiup MaNaGer CLI v" VERSION << _(" - Copyright 2013-2015 Lex - Bienvenue !") << endl << endl;
+    cout << "Multiup MaNaGer CLI v" VERSION << _(" - Copyright 2013-2023 Lex - Bienvenue !") << endl << endl;
     cout << _("\tPour des fonctionnalites plus evoluees, \n\tveuillez vous diriger vers \"Multiup MaNaGer GUI\",\n\tdisponible sur le site...") << endl << endl;
 
     std::size_t found;
