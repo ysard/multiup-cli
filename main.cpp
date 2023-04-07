@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     bool output = false;
 
     cout << "Multiup MaNaGer CLI v" VERSION << _(" - Copyright 2013-2023 Lex - Bienvenue !") << endl << endl;
-    cout << _("\tPour des fonctionnalites plus evoluees, \n\tveuillez vous diriger vers \"Multiup MaNaGer GUI\",\n\tdisponible sur le site...") << endl << endl;
+    cout << _("\tPour des fonctionnalités plus evoluées, \n\tveuillez vous diriger vers \"Multiup MaNaGer GUI\",\n\tdisponible sur le site...") << endl << endl;
 
     std::size_t found;
 
@@ -190,12 +190,12 @@ void display_help(string nomApp)
 {
     cout << _("Syntaxe:") << endl;
     cout << nomApp;
-    cout << _(" [options...] --read [\"fichier\" \"fichier\"...] --hosts [\"hebergeur\" \"hebergeur\"...] [2>liens.txt]") << endl;
+    cout << _(" [options...] --read [\"fichier\" \"fichier\"...] --hosts [\"hébergeur\" \"hébergeur\"...] [2>liens.txt]") << endl;
 
     cout << endl << _("Options:") << endl;
             cout << _("\t--login <nom> --password <password>") << endl;
-            cout << _("\t--view\t\tSimulation d'upload (verification des parametres).") << endl;
-            cout << _("\t--hosts\t\tSpecifier une liste personnelle d'hebergeurs.") << endl;
+            cout << _("\t--view\t\tSimulation d'upload (vérification des paramètres).") << endl;
+            cout << _("\t--hosts\t\tSpécifier une liste personnelle d'hébergeurs.") << endl;
             cout << _("\t--output\tEnregistre les liens dans le fichier choisi.") << endl;
             cout << _("\t--read\t\tEnvoyer un ou plusieurs fichiers.") << endl;
             cout << _("\t[2>liens.txt]\tRedirige stderr pour avoir les liens uniquement.") << endl << endl;

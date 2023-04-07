@@ -471,17 +471,17 @@ MainClass::EtatConnexion MainClass::webhostsDataProcessing()
             }
             */
 #ifdef WINDOWS
-            cout << _("Selectionne : [");
+            cout << _("Sélectionné : [");
             putInGreen("true");
-            cout << _("]; Deselectionne : [");
+            cout << _("]; Déselectionné : [");
             putInRed("false");
             cout  << _("]; Taille excessive : [");
             putBgInRed("false");
             cout << "];"
                  << endl;
 #else
-            cout << _("Selectionne : [") << putInGreen("true") << "]; "
-                 << _("Deselectionne : [") << putInRed("false") << "]; "
+            cout << _("Sélectionné : [") << putInGreen("true") << "]; "
+                 << _("Déselectionné : [") << putInRed("false") << "]; "
                  << _("Taille excessive : [") << putBgInRed("false") << "];"
                  << endl;
 #endif
@@ -547,10 +547,10 @@ MainClass::EtatConnexion MainClass::webhostsDataProcessing()
 
             // Transtypage pour la comparaison juste après...
             std::vector<int>::size_type maxHosts = (std::vector<int>::size_type)root.get("maxHosts", 100).asInt();
-            cout << _("Hebergeurs :: Nombre selectionnes : ") << m_hostList.size() << '/' << maxHosts << endl;
+            cout << _("Hébergeurs :: Nombre sélectionnés : ") << m_hostList.size() << '/' << maxHosts << endl;
 
             if (m_hostList.size() > maxHosts)
-                cout << _("Hebergeurs :: /!\\ Trop d'hebergeurs selectionnes : Resultats non garantis") << endl;
+                cout << _("Hébergeurs :: /!\\ Trop d'hébergeurs selectionnés : Resultats non garantis") << endl;
 
             return EtatConnexion::Ok;
         }
@@ -657,7 +657,7 @@ void MainClass::endProcess(CURLcode hResult)
             break;
 
         default:
-            cout << _("Connexion :: Verifiez votre connexion internet ou la disponibilite du site... => Upload Anonyme") << endl;
+            cout << _("Connexion :: Vérifiez votre connexion internet ou la disponibilité du site... => Upload Anonyme") << endl;
             m_connected = false;
             // on arrete pas le programme car le login n'est pas obligatoire;
             //même si dans ce cas on sait très bien que la liaison avec le site a un problème...
@@ -671,7 +671,7 @@ void MainClass::endProcess(CURLcode hResult)
         switch (etatConnexion) {
 
         case EtatConnexion::Bad:
-            cout << _("SelectionServeur :: Pas de serveur trouve") << endl;
+            cout << _("SelectionServeur :: Pas de serveur trouvé") << endl;
             return;
 
         case EtatConnexion::Ok:
@@ -692,7 +692,7 @@ void MainClass::endProcess(CURLcode hResult)
         switch (etatConnexion) {
 
         case EtatConnexion::Bad:
-            cout << _("Hebergeurs :: Pas d'hebergeurs trouves") << endl;
+            cout << _("Hébergeurs :: Pas d'hébergeurs trouvés") << endl;
             return;
 
         case EtatConnexion::Ok:
@@ -700,7 +700,7 @@ void MainClass::endProcess(CURLcode hResult)
             break;
 
         default:
-            cout << _("Hebergeurs :: Erreur inconnue") << endl;
+            cout << _("Hébergeurs :: Erreur inconnue") << endl;
             return;
         }
 
@@ -719,7 +719,7 @@ void MainClass::endProcess(CURLcode hResult)
         switch (etatConnexion) {
 
         case EtatConnexion::Bad:
-            cout << endl << _("Upload :: Pas d'url trouvee") << endl << endl;
+            cout << endl << _("Upload :: Pas d'url trouvée") << endl << endl;
             break;
 
         case EtatConnexion::Ok:
@@ -822,16 +822,3 @@ std::streampos getFileSize(const string& filename)
     }
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
