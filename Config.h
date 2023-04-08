@@ -30,8 +30,8 @@ www.multiup.org
 #endif
 
 // --- Configuration des urls de l'API
-#define URL_USER_LOGIN "http://www.multiup.org/api/login"
-#define URL_SERVER_SELECTION "http://www.multiup.org/api/get-fastest-server"
-#define URL_GET_UP_RIGHTS "http://www.multiup.org/api/get-list-hosts"
+#define URL_USER_LOGIN "https://www.multiup.org/api/login"
+#define URL_SERVER_SELECTION "https://www.multiup.org/api/get-fastest-server"
+#define URL_GET_UP_RIGHTS "https://www.multiup.org/api/get-list-hosts"
 
 #endif // CONFIG_H
