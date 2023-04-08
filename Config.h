@@ -26,7 +26,7 @@ www.multiup.org
 //#define ENABLE_NLS
 //#define LOCALES "/usr/share/locale"
 #ifndef VERSION
-    #define VERSION "0.4.1"
+    #define VERSION "0.6.0"
 #endif
 
 // --- Configuration des urls de l'API
