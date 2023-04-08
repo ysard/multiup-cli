@@ -123,6 +123,7 @@ private:
     std::list<std::string>  m_fileList;
     std::list<std::string>  m_listeHosts;
     std::string             m_currentUploadedFile;
+    std::streampos          m_currentUploadedFileSize;
 
     std::string             m_finalLink;
 

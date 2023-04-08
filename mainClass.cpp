@@ -148,9 +148,17 @@ void MainClass::connection()
         hResult = curl_easy_setopt(m_hCurl, CURLOPT_NOPROGRESS, 1);
     }
     else if (m_processingStep == 1) { // Sélection du serveur
+        // Récupération de la taille du fichier courant
+        m_currentUploadedFileSize = getFileSize(m_currentUploadedFile);
+
+        // Forge url with size parameter
+        string selectionUrl = URL_SERVER_SELECTION;
+        selectionUrl += "?size=";
+        selectionUrl += std::to_string(m_currentUploadedFileSize);
+        cout << selectionUrl << endl;
 
         //Specify the API Endpoint
-        hResult = curl_easy_setopt(m_hCurl, CURLOPT_URL, URL_SERVER_SELECTION);
+        hResult = curl_easy_setopt(m_hCurl, CURLOPT_URL, selectionUrl.c_str());
 
         //Progression désactivée
         hResult = curl_easy_setopt(m_hCurl, CURLOPT_NOPROGRESS, 1);
@@ -505,10 +513,6 @@ MainClass::EtatConnexion MainClass::webhostsDataProcessing()
                 }
             }
 
-
-            // Récupération de la taille du fichier courant
-            std::streampos fileSize = getFileSize(m_currentUploadedFile);
-
             for (iterator=members.begin(); iterator!=members.end(); ++iterator)
             {
                 /* La liste des hébergeurs et leurs états doit être sur 2 colonnes
@@ -522,7 +526,7 @@ MainClass::EtatConnexion MainClass::webhostsDataProcessing()
                 // Nom1
                 cout << setw(19) << left << *iterator;
                 // Etat1
-                bool ret = webhostParsing(root["hosts"][*iterator], fileSize);
+                bool ret = webhostParsing(root["hosts"][*iterator], m_currentUploadedFileSize);
                 // Hébergeur1 autorisé
                 if (ret)
                     m_hostList.push_back(*iterator);
@@ -538,7 +542,7 @@ MainClass::EtatConnexion MainClass::webhostsDataProcessing()
                 cout << setw(6) << ' '
                      << setw(19) << *iterator;
                 // Etat2
-                ret = webhostParsing(root["hosts"][*iterator], fileSize);
+                ret = webhostParsing(root["hosts"][*iterator], m_currentUploadedFileSize);
                 cout << endl;
                 // Hébergeur2 autorisé
                 if (ret)
