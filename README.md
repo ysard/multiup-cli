@@ -2,8 +2,8 @@
         Multiup MaNaGer CLI v0.4.1 - Copyright 2013-2015 Lex - Welcome !
 
             For more advanced features,
-            please go to "Multiup MaNaGer GUI",
-            which is available on the website...
+            please go to "Multiup MaNaGer GUI", which is available at
+            https://github.com/ysard/MultiupMaNaGeR
 
     Syntax:
     ./multiup-cli [options...] --read ["file" "file"...] --hosts ["host" "host"...] [2>links.txt]
@@ -13,10 +13,11 @@
             --view          Simulation of the upload (verification of the parameters).
             --hosts         Specify a personal list of hosts.
             --output        Write links in a specified text file.
+            --read          Send one or more files.
             [2>liens.txt]   Redirect links from stderr to a specific file.
 
 
-multiup-cli is a command line tool for sending files on www.multiup.org.
+`multiup-cli` is a command line tool for sending files on www.multiup.org.
 
 Features:
 
@@ -25,14 +26,17 @@ Features:
 * Ability to manually select a list of hosts
 * Multiplatform (Raspberry pi, GNU/Linux, Windows)
 
+Please note that a software with more advanced features and GUI is available at:
+https://github.com/ysard/MultiupMaNaGeR
+
 
 # Tutorial
 
 In the examples, two files were tested: one of 190Mo, the other 2,8Go.
---view option is used to simulate the upload (just a description of the
+`--view` option is used to simulate the upload (just a description of the
 behavior of the software when the files should be really uploaded).
 
-<img alt="Website screenshot" src="./doc/pub_example.png" width="800" />
+<img alt="screenshot" src="./doc/pub_example.png" width="800" />
 
 Command of examples 1 et 2:
 
@@ -51,7 +55,7 @@ on 4 hosts (larger than the authorized limit), so 14 hosts out of 18 will be use
 In examples 3 and 4, a list of 5 hosts (out of 18 allowed) were manually specified;
 again, in example 4, the file is too big for 3 of them.
 
-By removing --view option, the files will be really sent.
+By removing `--view` option, the files will be really sent.
 
 To retrieve only the links for each file, you will have to append
 the following instruction to your previous command:
@@ -118,6 +122,8 @@ Then if you want to compile the **deb** package for Debian or Ubuntu,
 run the following command:
 
     cpack
+    #or:
+    make package
 
 You will find the executable `multiup-cli` and the deb package `multiup-cli_x.x.x.deb`.
 
