@@ -39,25 +39,22 @@ if(WIN32)
         set(curl_lib_name libcurl_a.lib)
         set(curl_lib_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.44.0-devel-nmake/lib/)
         set(curl_include_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.44.0-devel-nmake/include/)
-        #set(curl_lib_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.44.0/build/lib/)
-        #set(curl_include_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.44.0/build/include/)
     endif()
 
     # Preprocessor directive: #define WINDOWS
     add_definitions(-DWINDOWS)
+    # IMPORTANT ! STATIC linking instead of SHARED
+    add_definitions(-DCURL_STATICLIB)
 endif()
 
 if(UNIX)
+    set(curl_lib_name curl)
     if(${CMAKE_SYSTEM_PROCESSOR} MATCHES armv6l)
         # Raspberry pi
-        set(curl_lib_name curl)
         set(curl_lib_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.44.0-armv6l/lib/)
         set(curl_include_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.44.0-armv6l/include/)
     else()
         # Other *NIX systems
-        set(curl_lib_name curl)
-        set(curl_lib_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.44.0/build/lib/)
-        set(curl_include_dir ${CMAKE_SOURCE_DIR}/third-party/curl-7.44.0/build/include/)
     endif()
 
     # Preprocessor directive: #define LINUX
@@ -110,8 +107,6 @@ include_directories(${curl_include_dir})
 MESSAGE(STATUS "Cmake prefix: ${CMAKE_SOURCE_DIR}")
 
 # Preprocessor definitions for this target.
-# IMPORTANT ! STATIC linking instead of SHARED
-add_definitions(-DCURL_STATICLIB)
 add_definitions(-DVERSION="${VERSION}")
 
 # Executable definition
