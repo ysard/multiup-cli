@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
     #ifdef ENABLE_NLS
     //~ i18n: initializes the entire current locale of the program as per environment variables set by the user
     //setlocale(LC_ALL, "en_GB");
+    setlocale (LC_ALL, "");
     //~ i18n: Indicate the path of the i18n catalog file
     // The section "multiup-cli" of this catalog will be called
     bindtextdomain("multiup-cli", LOCALES);
