@@ -127,6 +127,25 @@ run the following command:
 
 You will find the executable `multiup-cli` and the deb package `multiup-cli_x.x.x.deb`.
 
+### Translations
+
+French is the default language, but it can be replaced by translations files
+compiled with gettext.
+
+Here you will find the commands:
+
+    # Sync the sources with the model file
+    make -f internationalization/Makefile pot
+
+    # Prepare a model that can be translated
+    make -f internationalization/Makefile en_po
+
+    # Compile the translated model
+    make -f internationalization/Makefile mo
+
+    # Install the translation on your system (/usr/share/locale/en_GB/LC_MESSAGES/)
+    make -f internationalization/Makefile install
+
 
 # License
 
