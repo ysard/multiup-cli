@@ -752,7 +752,8 @@ bool webhostParsing(const Json::Value webhost, const std::streampos file_size)
     std::streampos max_upload_size = (std::streampos)webhost.get("size", 0).asInt();
 
     // On affiche la taille en premier
-    cout << setw(4) << left << convertIntToString(max_upload_size)
+    // Reserve 6 chars for size
+    cout << setw(6) << left << convertIntToString(max_upload_size)
          << setw(5) << left << " Mio";
 
     if (selection_state == "false") {
