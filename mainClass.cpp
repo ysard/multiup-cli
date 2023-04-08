@@ -637,7 +637,7 @@ void MainClass::endProcess(CURLcode hResult)
 {
     switch(hResult)
     {
-    case CURLE_OK:                  //cout << _("Curl :: Termine sans erreur") << endl;
+    case CURLE_OK:                  //cout << _("Curl :: Terminé sans erreur") << endl;
         break;
 
     default:                        cout << _("Curl :: Erreur ") << hResult << endl;
@@ -727,7 +727,7 @@ void MainClass::endProcess(CURLcode hResult)
             break;
 
         case EtatConnexion::Ok:
-            cout << endl << _("Upload :: Termine") << endl << endl;
+            cout << endl << _("Upload :: Terminé") << endl << endl;
             break;
 
         default:
