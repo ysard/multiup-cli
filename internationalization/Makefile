@@ -17,6 +17,6 @@ mo:
 	# Make final mo translation file
 	msgfmt -c -v -o $(NLS_FOLDER)/$(PROJECT_NAME).mo $(NLS_FOLDER)/english.po
 
-install_mo: make_mo
+install: mo
 	# Install translation
 	sudo cp $(NLS_FOLDER)/$(PROJECT_NAME).mo /usr/share/locale/en_GB/LC_MESSAGES/
