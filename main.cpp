@@ -1,18 +1,18 @@
 /*
-This file is part of multiup_cli.
+This file is part of multiup-cli.
 
-    multiup_cli is free software: you can redistribute it and/or modify
+    multiup-cli is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    multiup_cli is distributed in the hope that it will be useful,
+    multiup-cli is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with multiup_cli.  If not, see <http://www.gnu.org/licenses/>.
+    along with multiup-cli.  If not, see <http://www.gnu.org/licenses/>.
 
     Copyright 2013-2016 Lex
     www.multiup.org
@@ -53,10 +53,10 @@ int main(int argc, char *argv[])
     //~ i18n: initializes the entire current locale of the program as per environment variables set by the user
     //setlocale(LC_ALL, "en_GB");
     //~ i18n: Indicate the path of the i18n catalog file
-    // The section "multiup_cli" of this catalog will be called
-    bindtextdomain("multiup_cli", LOCALES);
+    // The section "multiup-cli" of this catalog will be called
+    bindtextdomain("multiup-cli", LOCALES);
     //~ i18n: sets the message domain
-    textdomain("multiup_cli");
+    textdomain("multiup-cli");
     #endif
 
 

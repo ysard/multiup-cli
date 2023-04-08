@@ -1,6 +1,6 @@
 #!/bin/bash
 
 # Remove translations
-if [ -f '/usr/share/locale/en_GB/LC_MESSAGES/multiup_cli.mo' ]
-	then rm '/usr/share/locale/en_GB/LC_MESSAGES/multiup_cli.mo'
+if [ -f '/usr/share/locale/en_GB/LC_MESSAGES/multiup-cli.mo' ]
+	then rm '/usr/share/locale/en_GB/LC_MESSAGES/multiup-cli.mo'
 fi

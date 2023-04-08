@@ -1,5 +1,5 @@
 # Project name
-PROJECT_NAME="multiup_cli"
+PROJECT_NAME="multiup-cli"
 # Internationalization folder
 NLS_FOLDER="./internationalization"
 
