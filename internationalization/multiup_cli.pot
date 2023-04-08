@@ -8,147 +8,155 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-12 22:44+0200\n"
+"POT-Creation-Date: 2023-04-08 03:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: mainClass.cpp:69
-msgid "Fichier en cours d'up : "
+#: main.cpp:69
+msgid " - Copyright 2013-2023 Lex - Bienvenue !"
 msgstr ""
 
-#: mainClass.cpp:78
-msgid "Fin du programme"
-msgstr ""
-
-#: mainClass.cpp:315 mainClass.cpp:351 mainClass.cpp:490 mainClass.cpp:545
-msgid "Failed to parse configuration\n"
-msgstr ""
-
-#: mainClass.cpp:400 mainClass.cpp:409
-msgid "Selectionne : ["
-msgstr ""
-
-#: mainClass.cpp:402
-msgid "]; Deselectionne : ["
-msgstr ""
-
-#: mainClass.cpp:404
-msgid "]; Taille excessive : ["
-msgstr ""
-
-#: mainClass.cpp:410
-msgid "Deselectionne : ["
-msgstr ""
-
-#: mainClass.cpp:411
-msgid "Taille excessive : ["
-msgstr ""
-
-#: mainClass.cpp:476
-msgid "Hebergeurs :: Nombre selectionnes : "
-msgstr ""
-
-#: mainClass.cpp:479
+#: main.cpp:70
 msgid ""
-"Hebergeurs :: /!\\ Trop d'hebergeurs selectionnes : Resultats non garantis"
-msgstr ""
-
-#: mainClass.cpp:535
-msgid "Upload :: Lien : "
-msgstr ""
-
-#: mainClass.cpp:560
-msgid "Curl :: Erreur "
-msgstr ""
-
-#: mainClass.cpp:570
-msgid "Connexion :: Mauvais login ou mauvais mot de passe => Upload Anonyme"
-msgstr ""
-
-#: mainClass.cpp:575
-msgid "Connexion :: Upload en tant que "
-msgstr ""
-
-#: mainClass.cpp:581
-msgid ""
-"Connexion :: Verifiez votre connexion internet ou la disponibilite du "
-"site... => Upload Anonyme"
-msgstr ""
-
-#: mainClass.cpp:595
-msgid "SelectionServeur :: Pas de serveur trouve"
-msgstr ""
-
-#: mainClass.cpp:603
-msgid "SelectionServeur :: Erreur inconnue"
-msgstr ""
-
-#: mainClass.cpp:617
-msgid "Hebergeurs :: Pas d'hebergeurs trouves"
-msgstr ""
-
-#: mainClass.cpp:625
-msgid "Hebergeurs :: Erreur inconnue"
-msgstr ""
-
-#: mainClass.cpp:631
-msgid "Fin de simulation pour ce fichier"
-msgstr ""
-
-#: mainClass.cpp:645
-msgid "Upload :: Pas d'url trouvee"
-msgstr ""
-
-#: mainClass.cpp:649
-msgid "Upload :: Termine"
-msgstr ""
-
-#: mainClass.cpp:652
-msgid "Upload :: Erreur inconnue"
-msgstr ""
-
-#: main.cpp:65
-msgid " - Copyright 2013-2015 Lex - Bienvenue !"
-msgstr ""
-
-#: main.cpp:66
-msgid ""
-"\tPour des fonctionnalites plus evoluees, \n"
+"\tPour des fonctionnalités plus evoluées, \n"
 "\tveuillez vous diriger vers \"Multiup MaNaGer GUI\",\n"
-"\tdisponible sur le site..."
+"\tdisponible sur https://github.com/ysard/MultiupMaNaGeR"
 msgstr ""
 
-#: main.cpp:179
+#: main.cpp:191
 msgid "Syntaxe:"
 msgstr ""
 
-#: main.cpp:181
+#: main.cpp:193
 msgid ""
-" [options...] --read [\"fichier\" \"fichier\"...] --hosts [\"hebergeur\" "
-"\"hebergeur\"...] [2>liens.txt]"
+" [options...] --read [\"fichier\" \"fichier\"...] --hosts [\"hébergeur\" "
+"\"hébergeur\"...] [2>liens.txt]"
 msgstr ""
 
-#: main.cpp:183
+#: main.cpp:195
 msgid "Options:"
 msgstr ""
 
-#: main.cpp:184
+#: main.cpp:196
 msgid "\t--login <nom> --password <password>"
 msgstr ""
 
-#: main.cpp:185
-msgid "\t--view\t\tSimulation d'upload (verification des parametres)."
+#: main.cpp:197
+msgid "\t--view\t\tSimulation d'upload (vérification des paramètres)."
 msgstr ""
 
-#: main.cpp:186
-msgid "\t--hosts\t\tSpecifier une liste personnelle d'hebergeurs."
+#: main.cpp:198
+msgid "\t--hosts\t\tSpécifier une liste personnelle d'hébergeurs."
 msgstr ""
 
-#: main.cpp:187
+#: main.cpp:199
+msgid "\t--output\tEnregistre les liens dans le fichier choisi."
+msgstr ""
+
+#: main.cpp:200
+msgid "\t--read\t\tEnvoyer un ou plusieurs fichiers."
+msgstr ""
+
+#: main.cpp:201
 msgid "\t[2>liens.txt]\tRedirige stderr pour avoir les liens uniquement."
+msgstr ""
+
+#: mainClass.cpp:80
+msgid "Fichier en cours d'up : "
+msgstr ""
+
+#: mainClass.cpp:89
+msgid "Fin du programme"
+msgstr ""
+
+#: mainClass.cpp:395 mainClass.cpp:432 mainClass.cpp:568 mainClass.cpp:627
+msgid "Failed to parse configuration\n"
+msgstr ""
+
+#: mainClass.cpp:482 mainClass.cpp:491
+msgid "Sélectionné : ["
+msgstr ""
+
+#: mainClass.cpp:484
+msgid "]; Déselectionné : ["
+msgstr ""
+
+#: mainClass.cpp:486
+msgid "]; Taille excessive : ["
+msgstr ""
+
+#: mainClass.cpp:492
+msgid "Déselectionné : ["
+msgstr ""
+
+#: mainClass.cpp:493
+msgid "Taille excessive : ["
+msgstr ""
+
+#: mainClass.cpp:554
+msgid "Hébergeurs :: Nombre sélectionnés : "
+msgstr ""
+
+#: mainClass.cpp:557
+msgid ""
+"Hébergeurs :: /!\\ Trop d'hébergeurs selectionnés : Resultats non garantis"
+msgstr ""
+
+#: mainClass.cpp:614
+msgid "Upload :: Lien : "
+msgstr ""
+
+#: mainClass.cpp:643
+msgid "Curl :: Erreur "
+msgstr ""
+
+#: mainClass.cpp:653
+msgid "Connexion :: Mauvais login ou mauvais mot de passe => Upload Anonyme"
+msgstr ""
+
+#: mainClass.cpp:658
+msgid "Connexion :: Upload en tant que "
+msgstr ""
+
+#: mainClass.cpp:664
+msgid ""
+"Connexion :: Vérifiez votre connexion internet ou la disponibilité du "
+"site... => Upload Anonyme"
+msgstr ""
+
+#: mainClass.cpp:678
+msgid "SelectionServeur :: Pas de serveur trouvé"
+msgstr ""
+
+#: mainClass.cpp:686
+msgid "SelectionServeur :: Erreur inconnue"
+msgstr ""
+
+#: mainClass.cpp:699
+msgid "Hébergeurs :: Pas d'hébergeurs trouvés"
+msgstr ""
+
+#: mainClass.cpp:707
+msgid "Hébergeurs :: Erreur inconnue"
+msgstr ""
+
+#: mainClass.cpp:712
+msgid "Fin de simulation pour ce fichier"
+msgstr ""
+
+#: mainClass.cpp:726
+msgid "Upload :: Pas d'url trouvée"
+msgstr ""
+
+#: mainClass.cpp:730
+msgid "Upload :: Terminé"
+msgstr ""
+
+#: mainClass.cpp:734
+msgid "Upload :: Erreur inconnue"
 msgstr ""
