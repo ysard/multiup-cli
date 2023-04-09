@@ -31,7 +31,7 @@ IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Command line tool for www.multiup.org")
     SET(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/ysard/multiup-cli")
     # SET(CPACK_PACKAGE_VENDOR "")
-    SET(CPACK_PACKAGE_CONTACT "Lex")
+    SET(CPACK_PACKAGE_CONTACT "Ysard <ysard@users.noreply.github.com>")
 
     # version
     # SET(CPACK_PACKAGE_VERSION_MAJOR "${MAJOR_VERSION}")
