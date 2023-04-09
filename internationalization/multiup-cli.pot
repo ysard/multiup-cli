@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: multiup-cli 0.6.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-08 03:40+0200\n"
+"POT-Creation-Date: 2023-04-10 01:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,52 +17,52 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.cpp:69
+#: main.cpp:70
 msgid " - Copyright 2013-2023 Lex - Bienvenue !"
 msgstr ""
 
-#: main.cpp:70
+#: main.cpp:71
 msgid ""
 "\tPour des fonctionnalités plus evoluées, \n"
 "\tveuillez vous diriger vers \"Multiup MaNaGer GUI\",\n"
 "\tdisponible sur https://github.com/ysard/MultiupMaNaGeR"
 msgstr ""
 
-#: main.cpp:191
+#: main.cpp:192
 msgid "Syntaxe:"
 msgstr ""
 
-#: main.cpp:193
+#: main.cpp:194
 msgid ""
 " [options...] --read [\"fichier\" \"fichier\"...] --hosts [\"hébergeur\" "
 "\"hébergeur\"...] [2>liens.txt]"
 msgstr ""
 
-#: main.cpp:195
+#: main.cpp:196
 msgid "Options:"
 msgstr ""
 
-#: main.cpp:196
+#: main.cpp:197
 msgid "\t--login <nom> --password <password>"
 msgstr ""
 
-#: main.cpp:197
+#: main.cpp:198
 msgid "\t--view\t\tSimulation d'upload (vérification des paramètres)."
 msgstr ""
 
-#: main.cpp:198
+#: main.cpp:199
 msgid "\t--hosts\t\tSpécifier une liste personnelle d'hébergeurs."
 msgstr ""
 
-#: main.cpp:199
+#: main.cpp:200
 msgid "\t--output\tEnregistre les liens dans le fichier choisi."
 msgstr ""
 
-#: main.cpp:200
+#: main.cpp:201
 msgid "\t--read\t\tEnvoyer un ou plusieurs fichiers."
 msgstr ""
 
-#: main.cpp:201
+#: main.cpp:202
 msgid "\t[2>liens.txt]\tRedirige stderr pour avoir les liens uniquement."
 msgstr ""
 
@@ -130,11 +130,11 @@ msgid ""
 msgstr ""
 
 #: mainClass.cpp:678
-msgid "SelectionServeur :: Pas de serveur trouvé"
+msgid "SélectionServeur :: Pas de serveur trouvé"
 msgstr ""
 
 #: mainClass.cpp:686
-msgid "SelectionServeur :: Erreur inconnue"
+msgid "SélectionServeur :: Erreur inconnue"
 msgstr ""
 
 #: mainClass.cpp:699
