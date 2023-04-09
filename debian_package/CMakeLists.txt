@@ -44,7 +44,7 @@ IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     # dependencies
     SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.14), libgcc1 (>= 1:4.1.1), libstdc++6 (>= 4.4.0), libcurl4-gnutls (>= 7.38.0)")
     SET(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
-    SET(CPACK_DEBIAN_PACKAGE_SECTION "base")
+    SET(CPACK_DEBIAN_PACKAGE_SECTION "web")
     SET(CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
 
     # additional files
