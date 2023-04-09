@@ -61,7 +61,7 @@ msgstr "\t--hosts\t\tSpecify your own list of hosts."
 
 #: main.cpp:199
 msgid "\t--output\tEnregistre les liens dans le fichier choisi."
-msgstr "\t[2>liens.txt]\tRedirect links from stderr to a specific file."
+msgstr "\t--output\tSave links in the specified file."
 
 #: main.cpp:200
 msgid "\t--read\t\tEnvoyer un ou plusieurs fichiers."
