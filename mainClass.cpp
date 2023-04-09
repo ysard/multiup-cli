@@ -675,15 +675,15 @@ void MainClass::endProcess(CURLcode hResult)
         switch (etatConnexion) {
 
         case EtatConnexion::Bad:
-            cout << _("SelectionServeur :: Pas de serveur trouvé") << endl;
+            cout << _("SélectionServeur :: Pas de serveur trouvé") << endl;
             return;
 
         case EtatConnexion::Ok:
-            //cout << _("SelectionServeur :: Serveur trouve") << endl;
+            //cout << _("SélectionServeur :: Serveur trouvé") << endl;
             break;
 
         default:
-            cout << _("SelectionServeur :: Erreur inconnue") << endl;
+            cout << _("SélectionServeur :: Erreur inconnue") << endl;
             return;
         }
         m_processingStep++;
