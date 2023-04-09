@@ -141,7 +141,7 @@ msgid "SélectionServeur :: Pas de serveur trouvé"
 msgstr "ServerSelection :: No server found"
 
 #: mainClass.cpp:686
-msgid "SelectionServeur :: Erreur inconnue"
+msgid "SélectionServeur :: Erreur inconnue"
 msgstr "ServerSelection :: Unknown error"
 
 #: mainClass.cpp:699
