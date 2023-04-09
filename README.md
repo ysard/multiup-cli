@@ -137,7 +137,7 @@ Here you will find the commands:
     # Sync the sources with the model file
     make -f internationalization/Makefile pot
 
-    # Prepare a model that can be translated
+    # Update the model that can be translated
     make -f internationalization/Makefile en_po
 
     # Compile the translated model
