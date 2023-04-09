@@ -53,7 +53,8 @@ IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     message("Copying locales")
     # In: ${CPACK_PACKAGE_DIRECTORY}/_CPack_Packages/Linux/DEB/${CPACK_PACKAGE_FILE_NAME}/usr/
     INSTALL(DIRECTORY ${CMAKE_SOURCE_DIR}/debian_package/${CMAKE_PROJECT_NAME}/usr/share
-            DESTINATION ${CPACK_PACKAGE_DIRECTORY}/usr/)
+            DESTINATION ${CPACK_PACKAGE_DIRECTORY}/usr/
+            FILES_MATCHING PATTERN "*.mo")
 
     message("Copying copyright")
     INSTALL(FILES ${CMAKE_SOURCE_DIR}/debian_package/${CMAKE_PROJECT_NAME}/DEBIAN/copyright
