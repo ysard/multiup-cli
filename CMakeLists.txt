@@ -167,6 +167,11 @@ if(UNIX)
     INSTALL(TARGETS multiup-cli
             DESTINATION "/usr/bin")
 
+    # Strip binaries from unnecessary notes, comments, etc
+    add_custom_command(
+        TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+        COMMAND strip --strip-unneeded --remove-section=.comment --remove-section=.note "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}" VERBATIM)
+
     # Debian package
     add_subdirectory(debian_package)
 
