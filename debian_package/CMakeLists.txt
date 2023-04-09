@@ -48,9 +48,11 @@ IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     SET(CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
 
     # additional files
-    set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/debian_package/multiup-cli/DEBIAN/postrm;")
-    message("Copying locales: ${CPACK_PACKAGE_DIRECTORY}/_CPack_Packages/Linux/DEB/${CPACK_PACKAGE_FILE_NAME}/usr/")
-    INSTALL(DIRECTORY ${CMAKE_SOURCE_DIR}/debian_package/multiup-cli/usr/share
+    set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/debian_package/${CMAKE_PROJECT_NAME}/DEBIAN/postrm;")
+
+    message("Copying locales")
+    # In: ${CPACK_PACKAGE_DIRECTORY}/_CPack_Packages/Linux/DEB/${CPACK_PACKAGE_FILE_NAME}/usr/
+    INSTALL(DIRECTORY ${CMAKE_SOURCE_DIR}/debian_package/${CMAKE_PROJECT_NAME}/usr/share
             DESTINATION ${CPACK_PACKAGE_DIRECTORY}/usr/)
 
     SET(CPACK_COMPONENTS_ALL Libraries ApplicationData)
