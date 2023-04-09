@@ -1,0 +1,10 @@
+!third-party/
+!internationalization/
+*.mo
+!debian_package/
+!*.txt
+!*.cpp
+!*.h
+!*.pro
+!README.md
+!doc/pub_example.png
