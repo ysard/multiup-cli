@@ -55,6 +55,10 @@ IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     INSTALL(DIRECTORY ${CMAKE_SOURCE_DIR}/debian_package/${CMAKE_PROJECT_NAME}/usr/share
             DESTINATION ${CPACK_PACKAGE_DIRECTORY}/usr/)
 
+    message("Copying copyright")
+    INSTALL(FILES ${CMAKE_SOURCE_DIR}/debian_package/${CMAKE_PROJECT_NAME}/DEBIAN/copyright
+            DESTINATION ${CPACK_PACKAGE_DIRECTORY}/usr/share/doc/${CMAKE_PROJECT_NAME}/)
+
     SET(CPACK_COMPONENTS_ALL Libraries ApplicationData)
     INCLUDE(CPack)
 
