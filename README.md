@@ -1,5 +1,5 @@
 
-        Multiup MaNaGer CLI v0.4.1 - Copyright 2013-2015 Lex - Welcome !
+        Multiup MaNaGer CLI v0.6.0 - Copyright 2013-2023 Lex - Welcome !
 
             For more advanced features,
             please go to "Multiup MaNaGer GUI", which is available at

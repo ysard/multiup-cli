@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with multiup-cli.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Copyright 2013-2016 Lex
+# Copyright 2013-2016 Ysard <ysard@users.noreply.github.com>
 # www.multiup.org
 
 # https://cmake.org/cmake/help/v3.0/module/CPackDeb.html

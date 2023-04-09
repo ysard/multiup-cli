@@ -14,10 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with multiup-cli.  If not, see <http://www.gnu.org/licenses/>.
 
-Copyright 2013-2016 Lex
+Copyright 2013-2023 Lex
 www.multiup.org
 */
-
 #ifndef CONFIG_H
 #define CONFIG_H
 
